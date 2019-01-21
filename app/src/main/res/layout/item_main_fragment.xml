@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="170dp"
+    android:orientation="vertical">
+
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="170dp"
+        android:layout_margin="5dp"
+        app:cardCornerRadius="@dimen/smaller_card_radius"
+        app:cardUseCompatPadding="true"
+        app:contentPadding="@dimen/tiny_content_padding">
+
+        <ImageView
+            android:id="@+id/iv_main_poster"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="@dimen/tiny_margin"
+            android:scaleType="centerCrop"
+            android:contentDescription="@string/movie_poster"
+            android:src="@drawable/jw_cover"
+            android:transitionName="@string/main_poster_transition_name" />
+
+        <TextView
+            android:id="@+id/tv_poster_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/small_padding"
+            android:layout_margin="@dimen/tiny_margin"
+            tools:text="Jurassic World: Fallen Kingdom"
+            android:gravity="center"
+            android:background="@color/colorTransparentBlack"
+            android:textColor="@color/colorWhite"
+            android:textStyle="bold"
+            android:fontFamily="sans-serif-condensed"
+            android:layout_gravity="bottom"/>
+
+    </android.support.v7.widget.CardView>
+</LinearLayout>

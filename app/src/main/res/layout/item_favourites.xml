@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="145dp"
+    android:layout_margin="@dimen/small_margin"
+    android:elevation="@dimen/small_card_elevation"
+    app:cardCornerRadius="@dimen/smaller_card_radius">
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/iv_fav_poster"
+            android:layout_width="85dp"
+            android:layout_height="match_parent"
+            android:layout_margin="14dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/jw_cover"
+            android:transitionName="@string/main_poster_transition_name"
+            android:contentDescription="@string/movie_poster"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <android.support.constraint.Guideline
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/guideline"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.33"/>
+
+        <TextView
+            android:id="@+id/tv_fav_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="20dp"
+            android:fontFamily="sans-serif"
+            android:padding="@dimen/smaller_padding"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/guideline"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Jurassic World: Fallen Kingdom This" />
+
+        <TextView
+            android:id="@+id/tv_fav_year"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:fontFamily="sans-serif"
+            android:padding="@dimen/smaller_padding"
+            android:textColor="@color/colorGrey"
+            app:layout_constraintStart_toStartOf="@+id/guideline"
+            app:layout_constraintTop_toBottomOf="@+id/tv_fav_title"
+            tools:text="Released:   2015" />
+
+        <TextView
+            android:id="@+id/tv_fav_rating"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:fontFamily="sans-serif"
+            android:padding="@dimen/smaller_padding"
+            android:textColor="@color/colorGrey"
+            app:layout_constraintStart_toStartOf="@+id/guideline"
+            app:layout_constraintTop_toBottomOf="@+id/tv_fav_year"
+            tools:text="Rating:       7.8" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/small_margin"
+            android:fontFamily="sans-serif-condensed"
+            android:text="@string/swipe_to_delete"
+            android:textColor="@color/colorGrey"
+            android:textSize="12sp"
+            android:textStyle="italic"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_fav_rating" />
+
+    </android.support.constraint.ConstraintLayout>
+</android.support.v7.widget.CardView>

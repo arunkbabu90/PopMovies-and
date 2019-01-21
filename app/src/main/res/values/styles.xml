@@ -1,0 +1,34 @@
+<!--suppress ALL -->
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:windowContentTransitions">true</item>
+
+        <!-- Shared Enter & Exit Transitions -->
+        <item name="android:windowEnterTransition">@transition/shared_poster_enter_transition</item>
+
+        <!-- Shared Element Enter & Exit Transitions -->
+        <item name="android:windowSharedElementEnterTransition">@transition/shared_poster_enter_transition</item>
+    </style>
+
+    <!-- Details Activity Theme -->
+    <style name="DetailsActivityTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">@color/colorDeepGrey</item>
+        <item name="colorPrimaryDark">@color/colorTransparent</item>
+        <item name="colorAccent">@color/colorDetailBg</item>
+        <item name="android:windowContentTransitions">true</item>
+        <item name="android:textColor">@color/colorLightGrey</item>
+
+        <!-- Shared Enter & Exit Transitions -->
+        <item name="android:windowExitTransition">@transition/shared_poster_enter_transition</item>
+
+        <!-- Shared Element Enter & Exit Transitions -->
+        <item name="android:windowSharedElementExitTransition">@transition/shared_poster_enter_transition</item>
+    </style>
+
+</resources>

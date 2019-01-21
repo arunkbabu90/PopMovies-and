@@ -1,0 +1,275 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorDetailBg"
+    android:fitsSystemWindows="true">
+
+    <!-- Collapsing AppBar -->
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/app_bar"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/collapsing_appbar_height"
+        android:fitsSystemWindows="true"
+        android:stateListAnimator="@animator/app_bar_always_elevated"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+
+        <android.support.design.widget.CollapsingToolbarLayout
+            android:id="@+id/detail_collapsing_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fitsSystemWindows="true"
+            app:contentScrim="?attr/colorPrimary"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed">
+
+            <ImageView
+                android:id="@+id/iv_collapsing_cover"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/collapsing_appbar_height"
+                android:fitsSystemWindows="true"
+                android:scaleType="centerCrop"
+                app:layout_collapseMode="parallax"
+                tools:src="@drawable/jw_backdrop"
+                android:contentDescription="@string/movie_cover" />
+
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                app:layout_collapseMode="pin"
+                app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+
+        </android.support.design.widget.CollapsingToolbarLayout>
+    </android.support.design.widget.AppBarLayout>
+
+
+    <!-- Main Content View -->
+    <android.support.v4.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="vertical"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:context=".DetailActivity">
+
+            <!-- Title Card -->
+            <android.support.v7.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardBackgroundColor="@color/colorDetailBg"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <TextView
+                    android:id="@+id/tv_video_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:padding="@dimen/card_title_padding"
+                    android:textAlignment="center"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:text="Jurassic World: Fallen Kingdom" />
+            </android.support.v7.widget.CardView>
+
+            <android.support.v7.widget.CardView
+                android:id="@+id/poster_card"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/poster_card_margin_start"
+                android:layout_marginTop="@dimen/poster_card_margin_top"
+                app:cardBackgroundColor="@color/colorDetailBg"
+                app:cardCornerRadius="@dimen/small_card_radius"
+                app:cardElevation="@dimen/small_card_elevation"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <ImageView
+                    android:id="@+id/iv_details_poster"
+                    android:layout_width="@dimen/poster_width"
+                    android:layout_height="@dimen/poster_height"
+                    android:scaleType="centerCrop"
+                    android:transitionName="@string/main_poster_transition_name"
+                    tools:src="@drawable/jw_cover"
+                    android:contentDescription="@string/movie_poster" />
+            </android.support.v7.widget.CardView>
+
+            <TextView
+                android:id="@+id/tv_details_year"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/year_margin_start"
+                android:layout_marginTop="@dimen/year_margin_top"
+                android:fontFamily="sans-serif"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toEndOf="@id/poster_card"
+                app:layout_constraintTop_toTopOf="@id/poster_card"
+                tools:text="2015" />
+
+            <TextView
+                android:id="@+id/tv_details_rating"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/small_margin"
+                android:layout_marginStart="@dimen/small_margin"
+                android:layout_marginTop="@dimen/rating_margin_top"
+                android:fontFamily="sans-serif"
+                android:textSize="16sp"
+                app:layout_constraintEnd_toStartOf="@id/tv_details_year"
+                app:layout_constraintHorizontal_bias="0.495"
+                app:layout_constraintStart_toEndOf="@id/tv_details_year"
+                app:layout_constraintTop_toBottomOf="@id/tv_details_year"
+                tools:text="7.8/10" />
+
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/btn_favourites"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/fab_margin_top"
+                android:src="@drawable/ic_favourite"
+                app:layout_constraintStart_toStartOf="@id/tv_details_rating"
+                app:layout_constraintTop_toBottomOf="@id/tv_details_rating" />
+
+            <TextView
+                android:id="@+id/textViewS"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/small_margin"
+                android:layout_marginTop="@dimen/synopsis_margin_top"
+                android:fontFamily="sans-serif"
+                android:text="@string/synopsis"
+                android:textColor="@color/colorWhite"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                app:layout_constraintTop_toBottomOf="@id/poster_card"
+                app:layout_constraintStart_toStartOf="@id/description_card" />
+
+            <!-- Description Card -->
+            <android.support.v7.widget.CardView
+                android:id="@+id/description_card"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/normal_margin"
+                android:layout_marginStart="@dimen/normal_margin"
+                android:layout_marginTop="@dimen/desc_card_top_margin"
+                app:cardBackgroundColor="@color/colorDetailBg"
+                app:cardCornerRadius="@dimen/small_card_radius"
+                app:cardElevation="@dimen/small_card_elevation"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/textViewS">
+
+                <TextView
+                    android:id="@+id/tv_details_description"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif"
+                    android:paddingBottom="@dimen/desc_text_padding"
+                    android:paddingEnd="@dimen/desc_text_padding_end"
+                    android:paddingStart="@dimen/desc_text_padding"
+                    android:paddingTop="@dimen/desc_text_padding"
+                    tools:text="A volcanic eruption threatens the remaining dinosaurs on the island of Isla Nublar, where the creatures have freely roamed for several years after the demise of an animal theme park known as Jurassic World. Claire Dearing, the former park manager, has now founded the Dinosaur Protection Group, an organization dedicated to protecting the dinosaurs. To help with her cause, Claire has recruited Owen Grady, a former dinosaur trainer who worked at the park, to prevent the extinction of the dinosaurs once again" />
+            </android.support.v7.widget.CardView>
+
+            <TextView
+                android:id="@+id/textView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/small_margin"
+                android:layout_marginTop="@dimen/trailer_margin_top"
+                android:fontFamily="sans-serif"
+                android:text="@string/videos"
+                android:textColor="@color/colorWhite"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="@id/description_card"
+                app:layout_constraintTop_toBottomOf="@id/description_card" />
+
+            <!-- Trailers Card -->
+            <android.support.v7.widget.CardView
+                android:id="@+id/video_list_card"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/trailer_card_margin"
+                app:cardBackgroundColor="@color/colorDetailBg"
+                app:cardCornerRadius="@dimen/small_card_radius"
+                app:cardElevation="@dimen/small_card_elevation"
+                app:layout_constraintStart_toStartOf="@id/textView"
+                app:layout_constraintTop_toBottomOf="@id/textView">
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/rv_video_list"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:clipToPadding="false"/>
+
+                <TextView
+                    android:id="@+id/tv_video_failed"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/err_check_internet"
+                    android:gravity="center"
+                    android:padding="16dp"
+                    android:textStyle="italic"
+                    android:textSize="14sp"
+                    android:fontFamily="sans-serif"
+                    android:textColor="@color/colorWhite"
+                    android:visibility="gone" />
+            </android.support.v7.widget.CardView>
+
+            <TextView
+                android:id="@+id/textViewR"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/small_margin"
+                android:layout_marginTop="@dimen/trailer_margin_top"
+                android:fontFamily="sans-serif"
+                android:text="@string/reviews"
+                android:textColor="@color/colorWhite"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="@id/video_list_card"
+                app:layout_constraintTop_toBottomOf="@id/video_list_card" />
+
+            <!-- Review Card -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:orientation="vertical"
+                app:layout_constraintStart_toStartOf="@id/textViewR"
+                app:layout_constraintTop_toBottomOf="@id/textViewR"
+                app:layout_constraintBottom_toBottomOf="parent">
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/rv_reviews"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:clipToPadding="false"/>
+
+                <TextView
+                    android:id="@+id/tv_review_err"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/err_review"
+                    android:gravity="center"
+                    android:padding="16dp"
+                    android:textStyle="italic"
+                    android:textSize="14sp"
+                    android:fontFamily="sans-serif"
+                    android:textColor="@color/colorWhite"
+                    android:visibility="gone" />
+            </LinearLayout>
+        </android.support.constraint.ConstraintLayout>
+    </android.support.v4.widget.NestedScrollView>
+</android.support.design.widget.CoordinatorLayout>

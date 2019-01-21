@@ -1,0 +1,28 @@
+<resources>
+    <string name="app_name">Pop Movies</string>
+
+    <string name="err_check_internet">Failed to load video data. You need internet connection to
+        view and play videos</string>
+    <string name="err_review">Failed to load reviews. You need internet connection to load reviews</string>
+    <string name="err_no_reviews">No Reviews Found for this Movie</string>
+    <string name="err_no_videos">No Videos Found for this Movie</string>
+    <string name="videos">Related Videos</string>
+    <string name="reviews">Reviews</string>
+
+    <string name="tab_title_popular">Popular</string>
+    <string name="tab_title_top_rated">Top Rated</string>
+    <string name="tab_title_favourites">Favourites</string>
+    <string name="main_poster_transition_name">main_poster_shared_transition</string>
+    <string name="synopsis">Synopsis</string>
+    <string name="err_no_internet">No Internet Connection</string>
+    <string name="loading_movies">Loading Movies....</string>
+    <string name="no_favourites">No Movie Marked as Favourite Yet!</string>
+    <string name="undo">UNDO</string>
+    <string name="movie_poster">Movie Poster</string>
+    <string name="movie_cover">Movie Cover</string>
+    <string name="share_video">Share Video</string>
+    <string name="send_to">Share with:</string>
+    <string name="err_no_app_found">No applications found to perform this operation</string>
+    <string name="swipe_to_delete">Swipe to delete</string>
+
+</resources>

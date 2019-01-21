@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="12dp"
+    app:cardBackgroundColor="@color/colorReviewCard"
+    app:cardCornerRadius="@dimen/small_card_elevation"
+    app:cardElevation="@dimen/smaller_card_elevation" >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/normal_padding">
+
+        <TextView
+            android:id="@+id/tv_author"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif"
+            android:textColor="@color/colorGrey"
+            android:textSize="12sp"
+            android:textStyle="italic"
+            tools:text="Trailer" />
+
+        <TextView
+            android:id="@+id/tv_content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif"
+            android:paddingTop="10dp"
+            android:textColor="@color/colorLightGrey"
+            android:textSize="14sp"
+            android:layout_below="@id/tv_author"
+            tools:text="Jurassic World: Fallen Kingdom" />
+
+
+    </RelativeLayout>
+</android.support.v7.widget.CardView>

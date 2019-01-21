@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimaryDark">#271159</color>
+    <color name="colorPrimary">#553987</color>
+    <color name="colorMainBg">#8464b7</color>
+    <color name="colorAccent">#8f9bff</color>
+    <color name="colorWhite">#eeeeee</color>
+    <color name="colorLightGrey">#e0e0e0</color>
+    <color name="colorGrey">#9e9e9e</color>
+    <color name="colorReviewCard">#545454</color>
+    <color name="colorDetailBg">@color/colorDarkGrey</color>
+    <color name="colorDarkGrey">#424242</color>
+    <color name="colorDeepGrey">#212121</color>
+    <color name="colorTransparent">#00333321</color>
+    <color name="colorTransparentBlack">#90000000</color>
+    <color name="colorGreen">#4CAF50</color>
+</resources>
