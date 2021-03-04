@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorBlackBackground"
+    tools:context=".ui.activity.ProfileActivity">
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/iv_profile_dp"
+        android:layout_width="@dimen/dp_image_view_size_large"
+        android:layout_height="@dimen/dp_image_view_size_large"
+        android:layout_marginStart="@dimen/default_margin"
+        android:layout_marginEnd="@dimen/default_margin"
+        android:layout_marginTop="100dp"
+        android:scaleType="centerCrop"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:shapeAppearance="@style/CircularImageView"
+        app:srcCompat="@drawable/default_dp" />
+
+    <ProgressBar
+        android:id="@+id/pb_profile_dp_loading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:layout_constraintTop_toTopOf="@id/iv_profile_dp"
+        app:layout_constraintStart_toStartOf="@id/iv_profile_dp"
+        app:layout_constraintBottom_toBottomOf="@id/iv_profile_dp"
+        app:layout_constraintEnd_toEndOf="@id/iv_profile_dp" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_doc_profile_dp_edit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_edit"
+        app:fabSize="mini"
+        app:backgroundTint="@color/colorGreen"
+        app:layout_constraintHorizontal_bias="0.95"
+        app:layout_constraintBottom_toBottomOf="@id/iv_profile_dp"
+        app:layout_constraintEnd_toEndOf="@id/iv_profile_dp"
+        app:layout_constraintStart_toStartOf="@id/iv_profile_dp"
+        android:contentDescription="@string/edit_profile_picture" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_profile"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginStart="@dimen/default_margin"
+        android:layout_marginEnd="@dimen/default_margin"
+        android:layout_marginBottom="@dimen/medium_margin"
+        android:layout_marginTop="@dimen/huge_margin"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/iv_profile_dp" />
+
+    <ProgressBar
+        android:id="@+id/pb_profile_loading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:layout_constraintTop_toTopOf="@id/rv_profile"
+        app:layout_constraintStart_toStartOf="@id/rv_profile"
+        app:layout_constraintBottom_toBottomOf="@id/rv_profile"
+        app:layout_constraintEnd_toEndOf="@id/rv_profile" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/tv_profile_error"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/default_margin"
+        android:text="@string/err_load_failed_default"
+        android:gravity="center"
+        android:padding="@dimen/default_padding"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@id/rv_profile"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/rv_profile" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_sign_out"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/default_margin"
+        android:layout_marginEnd="@dimen/default_margin"
+        android:layout_marginBottom="@dimen/default_margin"
+        android:text="@string/sign_out"
+        android:textColor="@color/colorSignOutButton"
+        android:backgroundTint="@android:color/transparent"
+        app:strokeColor="@color/colorSignOutButton"
+        app:strokeWidth="2dp"
+        app:cornerRadius="@dimen/small_corner_radius"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

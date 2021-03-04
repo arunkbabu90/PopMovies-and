@@ -1,27 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/favourites_fragment"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/favourites_fragment_layout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/colorPurple"
+    tools:context=".ui.fragment.FavouritesFragment">
 
-    <android.support.v7.widget.RecyclerView
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_favourites"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="visible" />
+        android:layout_height="match_parent" />
 
     <TextView
-        android:id="@+id/tv_fav_no_internet"
+        android:id="@+id/tv_fav_err"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/no_favourites"
+        android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:gravity="center"
+        android:fontFamily="@font/muli_regular"
+        android:text="@string/no_favourites"
         android:textStyle="bold"
-        android:textSize="16sp"
-        android:fontFamily="sans-serif"
-        android:textColor="@color/colorWhite"
+        android:textColor="@color/colorTransparentWhite70"
+        android:textSize="14sp"
         android:visibility="gone" />
-
-</android.support.constraint.ConstraintLayout>
+</FrameLayout>

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:background="@color/colorDarkGrey">
+
+    <TextView
+        android:id="@+id/crew_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="sans-serif"
+        android:text="@string/crew"
+        android:textColor="@color/colorTextLightGrey"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:layout_margin="@dimen/default_margin" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_crew"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/default_margin"
+        android:layout_marginBottom="@dimen/default_margin" />
+
+    <TextView
+        android:id="@+id/cast_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="sans-serif"
+        android:text="@string/cast"
+        android:textColor="@color/colorTextLightGrey"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:layout_margin="@dimen/default_margin"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_cast"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/default_margin"
+        android:layout_marginBottom="@dimen/default_margin" />
+
+</LinearLayout>

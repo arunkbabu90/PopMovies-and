@@ -1,21 +1,23 @@
 <resources>
     <string name="app_name">Pop Movies</string>
 
-    <string name="err_check_internet">Failed to load video data. You need internet connection to
-        view and play videos</string>
+    <string name="err_check_internet">Failed to load video data. You need internet connection to view and play videos</string>
     <string name="err_review">Failed to load reviews. You need internet connection to load reviews</string>
     <string name="err_no_reviews">No Reviews Found for this Movie</string>
     <string name="err_no_videos">No Videos Found for this Movie</string>
+    <string name="err_default">Error! Something went wrong</string>
     <string name="videos">Related Videos</string>
     <string name="reviews">Reviews</string>
 
+    <string name="tab_title_now_playing">Now Playing</string>
     <string name="tab_title_popular">Popular</string>
     <string name="tab_title_top_rated">Top Rated</string>
+    <string name="tab_title_search">Search</string>
     <string name="tab_title_favourites">Favourites</string>
-    <string name="main_poster_transition_name">main_poster_shared_transition</string>
+    <!--string name="main_poster_transition_name">main_poster_shared_transition</string-->
     <string name="synopsis">Synopsis</string>
     <string name="err_no_internet">No Internet Connection</string>
-    <string name="loading_movies">Loading Movies....</string>
+    <string name="err_img_load">Unable to load image. Please try again</string>
     <string name="no_favourites">No Movie Marked as Favourite Yet!</string>
     <string name="undo">UNDO</string>
     <string name="movie_poster">Movie Poster</string>
@@ -24,5 +26,121 @@
     <string name="send_to">Share with:</string>
     <string name="err_no_app_found">No applications found to perform this operation</string>
     <string name="swipe_to_delete">Swipe to delete</string>
+    <string name="mark_favourite">Mark Favourite</string>
+    <string name="read_reviews">Read Reviews</string>
+    <string name="loading">Loading Movies…</string>
+    <string name="coming_soon">Coming Soon…</string>
+    <string name="search_for_movie">Search for Movies</string>
+    <string name="no_movies_found">No Movies Found</string>
+    <string name="search_movie">Search Movie</string>
 
+    <!-- Login Activity -->
+    <string name="email">Email</string>
+    <string name="prompt_password">Password</string>
+    <string name="login">Login</string>
+    <string name="sign_in">Sign in</string>
+    <string name="forgot_password">Forgot Password?</string>
+    <string name="err_login">Email or Password doesn\'t match</string>
+    <string name="err_blank_email">Email must not be left blank</string>
+    <string name="err_invalid_email">Please enter a valid email</string>
+    <string name="err_password">Please enter your password</string>
+    <string name="err_offline">You are offline!</string>
+
+    <!-- ForgotPassword Activity -->
+    <string name="password_reset_info">Enter your email so that we can send a link to reset your password</string>
+    <string name="send_verification">Send Verification</string>
+    <string name="reset_password">Reset Password</string>
+    <string name="err_send_verification_failed">Failed to send verification Email! Please make sure that you have entered the correct email of associated with your account and try again</string>
+    <string name="err_email_send">Failed to send verification Email! Please try again</string>
+    <string name="err_indexing_failed">Error! Indexing search profile failed. Please try again</string>
+
+    <!-- Sign Up Activity -->
+    <string name="sign_up_message">Sign Up</string>
+    <string name="login_as_guest">Login as Guest</string>
+    <string name="full_name">Full Name</string>
+    <string name="height_desc">Height in centimeters</string>
+    <string name="weight_desc">Weight in kilograms</string>
+    <string name="mobile_number">Mobile Number</string>
+    <string name="sign_up_information">Sign Up</string>
+    <string name="sign_up_desc">Create your Filmibeat account. It\'s free</string>
+    <string name="confirm_password">Confirm Password</string>
+    <string name="create">Create</string>
+    <string name="date_of_birth">Date of Birth</string>
+    <string name="age">Age</string>
+    <string name="err_password_no_match">Passwords doesn\'t match</string>
+    <string name="err_sign_up_password">Password should not be blank</string>
+    <string name="sex">Sex</string>
+    <string name="male">Male</string>
+    <string name="female">Female</string>
+    <string name="disorder_desc">Can you please tell us your disease/ disorder that you are currently under treatment</string>
+    <string name="cancel">Cancel</string>
+    <string name="commit">Commit</string>
+    <string name="edit">Edit</string>
+    <string name="err_profile_add_details_failed">Adding details to profile failed. Please try again!</string>
+    <string name="retry">Retry</string>
+    <string name="content_desc_error_icon">Error Icon</string>
+    <string name="close">Close</string>
+    <string name="retrying_profile_update">Retrying Profile Update</string>
+    <string name="creating_profile">Setting up your profile. Please be patient…</string>
+    <string name="err_password_length">Password should be at-least 8 characters long</string>
+    <string name="err_empty_field">This field can\'t be empty</string>
+    <string name="err_some_field_empty">Error! Some of the fields are empty</string>
+    <string name="err_pls_fix_all_errors">Please fix all the errors before proceeding</string>
+    <string name="verify_account_heading">Verify Account</string>
+    <string name="unverified">Unverified</string>
+    <string name="verified">Verified</string>
+    <string name="sending_verification">Sending Verification email to %1$s. Please wait…</string>
+    <string name="wait_n_seconds_to_retry">Wait for %1$s seconds before retrying</string>
+    <string name="verification_success_desc">Your account has been successfully verified. Press Continue to login</string>
+    <string name="err_email_exists">Email Already exists</string>
+    <string name="_continue">Continue</string>
+    <string name="err_verification_email_already_sent">Error! Most probably the verification email is already sent. Please check your email</string>
+    <string name="err_account_not_verified">Account Not Verified! Click here to verify</string>
+    <string name="err_account_not_verified_desc">Account Not Verified!\nSome features will stay disabled unless you verify your account</string>
+    <string name="err_account_not_verified_desc_doc">Account Not Verified!\nPatients can\'t send reports to you and you won\'t appear in searches unless you verify</string>
+    <string name="err_account_not_verified_desc2">Account Not Verified!\nYou can\'t send reports to a doctor unless you verify</string>
+    <string name="account_verified">Account Verified</string>
+    <string name="verification_email_sent">A verification email has been sent to %1$s</string>
+    <string name="patient">Patient</string>
+    <string name="doctor">Doctor</string>
+    <string name="powered_by">Powered by</string>
+    <string name="err_remove_fav"><![CDATA[Failed remove from Favourites! Please check your internet connection & try again]]></string>
+    <string name="err_add_fav">Failed to add as Favourite! Please check your internet connection and try again\n%1$s</string>
+    <string name="err_fav_movie">Failed to Load Favourite Movies</string>
+    <string name="released">Released: %1$s</string>
+    <string name="rating">Rating: %1$s</string>
+
+    <string name="add_operation">added</string>
+    <string name="modify_operation">modified</string>
+    <string name="remove_operation">removed</string>
+    <string name="cast">Cast</string>
+    <string name="crew">Crew</string>
+    <string name="company_logo">Company Logo</string>
+    <string name="companies">Production Companies</string>
+    <string name="guest">Guest</string>
+    <string name="profile">Profile</string>
+    <string name="favourite_movies">Favourite Movies</string>
+    <string name="sign_out">Sign Out</string>
+    <string name="signed_out">Signed Out</string>
+    <string name="err_load_failed_default">Failed to Load Data. Please check your internet connection and try again</string>
+    <string name="err_unable_to_fetch">Error! Unable to fetch profile details. Please check your internet connection and try again</string>
+    <string name="edit_profile_picture">Edit Profile Picture</string>
+    <string name="uploading_dp">Uploading Photo…</string>
+    <string name="err_upload_failed">Error! Upload Failed</string>
+    <string name="saved">Saved</string>
+    <string name="save">Save</string>
+    <string name="not_saved">Not Saved!</string>
+    <string name="pick_photo">Pick a Photo</string>
+    <string name="err_review_fetch">Unable to fetch reviews! Please check your internet connection and try again</string>
+    <string name="no_reviews_found">No Reviews Found</string>
+    <string name="back">Back</string>
+    <string name="type_msg">Type a message</string>
+    <string name="msg_sent">%1$s</string>
+    <string name="global_chat">Global Chat</string>
+    <string name="send">Send</string>
+    <string name="err_no_messages">It\'s lonely here!</string>
+
+    <string name="feature_disabled_for_guest">This feature is only available to registered users</string>
+    <string name="err_feature_disabled">This feature is disabled because your account is not verified</string>
+    <string name="err_feature_disabled_short">Feature Disabled: Account Unverified</string>
 </resources>

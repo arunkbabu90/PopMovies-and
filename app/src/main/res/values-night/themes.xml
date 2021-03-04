@@ -1,0 +1,53 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Theme.PopMovies" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <!-- Primary brand color. -->
+        <item name="colorPrimary">@color/colorDarkGrey</item>
+        <item name="colorPrimaryVariant">@color/colorDarkerGrey</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <!-- Secondary brand color. -->
+        <item name="colorSecondary">@color/colorVioletLight</item>
+        <item name="colorSecondaryVariant">@color/colorVioletLight</item>
+        <item name="colorOnSecondary">@color/white</item>
+
+        <!-- Customize your theme here. -->
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+
+    <style name="Theme.PopMovies.Details" parent="Theme.PopMovies">
+        <item name="android:statusBarColor" tools:targetApi="l">@android:color/transparent</item>
+        <item name="android:navigationBarColor" tools:targetApi="l">@color/colorDarkGrey</item>
+    </style>
+
+    <style name="Theme.PopMovies.LoginButtonStyle" parent="Widget.MaterialComponents.Button">
+        <item name="android:paddingStart">@dimen/login_button_padding_horizontal</item>
+        <item name="android:paddingEnd">@dimen/login_button_padding_horizontal</item>
+        <item name="android:paddingTop">@dimen/login_button_padding_vertical</item>
+        <item name="android:paddingBottom">@dimen/login_button_padding_vertical</item>
+        <item name="backgroundTint">@color/colorBlue</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:fontFamily">@font/muli_bold</item>
+        <item name="android:textSize">20sp</item>
+        <item name="cornerRadius">10dp</item>
+        <item name="android:textColor">@color/black</item>
+    </style>
+
+    <style name="Theme.PopMovies.SignUpButtonStyle" parent="Widget.MaterialComponents.Button">
+        <item name="android:paddingStart">@dimen/login_button_padding_horizontal</item>
+        <item name="android:paddingEnd">@dimen/login_button_padding_horizontal</item>
+        <item name="android:paddingTop">@dimen/login_button_padding_vertical</item>
+        <item name="android:paddingBottom">@dimen/login_button_padding_vertical</item>
+        <item name="backgroundTint">@android:color/transparent</item>
+        <item name="strokeWidth">2dp</item>
+        <item name="strokeColor">@color/colorBlue</item>
+        <item name="android:textColor">@color/colorBlue</item>
+        <item name="android:fontFamily">@font/muli_bold</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textSize">20sp</item>
+        <item name="cornerRadius">10dp</item>
+    </style>
+
+    <style name="CircularImageView">
+        <item name="cornerSize">50%</item>
+    </style>
+</resources>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="CustomInputTextField">
+        <attr name="android:textColor" format="color"/>
+    </declare-styleable>
+    <declare-styleable name="ActionCard">
+        <attr name="icn" format="reference|color"/>
+        <attr name="iconTint" format="reference|color"/>
+        <attr name="description" format="string"/>
+    </declare-styleable>
+</resources>

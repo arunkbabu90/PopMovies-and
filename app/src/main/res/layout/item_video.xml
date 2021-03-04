@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="230dp"
+    android:layout_height="125dp"
+    android:layout_margin="@dimen/default_margin"
+    app:cardElevation="@dimen/smaller_card_elevation"
+    app:cardCornerRadius="@dimen/small_corner_radius">
+
+    <ImageView
+        android:id="@+id/itemVideo_thumbnail"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@drawable/jw_backdrop"
+        android:scaleType="centerCrop"
+        android:tintMode="src_over"
+        app:tint="@color/colorTransparentBlack70"
+        tools:ignore="ContentDescription" />
+
+    <ImageView
+        android:id="@+id/itemVideo_siteIcon"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_gravity="center"
+        android:src="@drawable/ic_play"
+        tools:ignore="ContentDescription" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/itemVideo_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/small_margin"
+        android:layout_gravity="top"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:fontFamily="sans-serif"
+        android:scrollHorizontally="true"
+        tools:text="Avatar Official Trailer" />
+
+</com.google.android.material.card.MaterialCardView>

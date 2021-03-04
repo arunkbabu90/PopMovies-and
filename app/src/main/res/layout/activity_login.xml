@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorBlackBackground"
+    android:fillViewport="true"
+    tools:context=".ui.activity.LoginActivity">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.5" />
+
+        <TextView
+            android:id="@+id/login_textView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/default_margin"
+            android:fontFamily="@font/muli_extra_bold"
+            android:gravity="center"
+            android:text="@string/login"
+            android:textAppearance="@style/TextAppearance.AppCompat.Display2"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tv_login_error"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/default_margin"
+            android:textColor="@color/colorCatRed"
+            android:visibility="invisible"
+            android:textSize="12sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/login_textView"
+            tools:text="@string/err_login" />
+
+        <LinearLayout
+            android:id="@+id/login_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/large_margin"
+            android:layout_marginEnd="@dimen/large_margin"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toTopOf="@id/tv_powered_by"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_login_error"
+            app:layout_constraintVertical_bias="0.25">
+
+            <!-- Email -->
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.Design.TextInputLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/sign_up_et_state_list_drawable"
+                android:paddingTop="6dp"
+                android:paddingBottom="2dp"
+                android:textColorHint="@color/colorTextLightGrey"
+                app:hintTextColor="@color/colorVioletLight"
+                app:errorEnabled="true">
+
+                <arunkbabu90.popmovies.ui.view.CustomInputTextField
+                    android:id="@+id/et_email"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:autofillHints="email"
+                    android:focusable="true"
+                    android:fontFamily="@font/muli_light"
+                    android:hint="@string/email"
+                    android:inputType="textEmailAddress"
+                    android:paddingTop="2dp"
+                    android:selectAllOnFocus="true" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <!-- Password -->
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.Design.TextInputLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/medium_margin"
+                android:background="@drawable/sign_up_et_state_list_drawable"
+                android:paddingTop="6dp"
+                android:paddingBottom="2dp"
+                android:textColorHint="@color/colorTextLightGrey"
+                app:hintTextColor="@color/colorVioletLight"
+                app:errorEnabled="true">
+
+                <arunkbabu90.popmovies.ui.view.CustomInputTextField
+                    android:id="@+id/et_password"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:autofillHints="password"
+                    android:focusable="true"
+                    android:fontFamily="@font/muli_light"
+                    android:hint="@string/prompt_password"
+                    android:imeActionLabel="@string/sign_in"
+                    android:imeOptions="actionDone"
+                    android:inputType="text"
+                    android:maxLines="1"
+                    android:paddingTop="2dp"
+                    android:selectAllOnFocus="true" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <!-- Login Button -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_login"
+                style="@style/Theme.PopMovies.LoginButtonStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginStart="@dimen/huge_margin"
+                android:layout_marginTop="@dimen/huge_margin"
+                android:layout_marginEnd="@dimen/huge_margin"
+                android:elevation="5dp"
+                android:onClick="onLoginClick"
+                android:padding="@dimen/small_padding"
+                android:stateListAnimator="@null"
+                android:text="@string/login"
+                android:translationZ="5dp" />
+
+            <!-- Forgot Password -->
+            <TextView
+                android:id="@+id/tv_forgot_password"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginStart="@dimen/default_margin"
+                android:layout_marginTop="@dimen/medium_margin"
+                android:layout_marginEnd="@dimen/default_margin"
+                android:fontFamily="@font/muli_light"
+                android:onClick="onForgotPasswordClick"
+                android:padding="@dimen/default_padding"
+                android:text="@string/forgot_password"
+                android:textColor="@color/colorBlue" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tv_sign_up"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/medium_margin"
+            android:fontFamily="@font/muli_light"
+            android:gravity="center"
+            android:onClick="onSignUpTextViewClick"
+            android:padding="@dimen/default_padding"
+            android:text="@string/sign_up_message"
+            android:textColor="@color/colorBlue"
+            app:layout_constraintEnd_toStartOf="@+id/guideline2"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/login_layout" />
+
+        <TextView
+            android:id="@+id/tv_login_guest"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/medium_margin"
+            android:fontFamily="@font/muli_light"
+            android:gravity="center"
+            android:onClick="onLoginGuestClick"
+            android:padding="@dimen/default_padding"
+            android:text="@string/login_as_guest"
+            android:textColor="@color/colorBlue"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/guideline2"
+            app:layout_constraintTop_toBottomOf="@id/login_layout" />
+
+        <TextView
+            android:id="@+id/tv_powered_by"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:fontFamily="@font/muli_extra_bold"
+            android:text="@string/powered_by"
+            android:textColor="@color/semiTransparentTextColor"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.4"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <ProgressBar
+            android:id="@+id/pb_login"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="@dimen/default_margin"
+            android:indeterminate="true"
+            android:visibility="invisible"
+            android:indeterminateDrawable="@drawable/custom_green_progress_circle_drawable"
+            app:layout_constraintBottom_toTopOf="@id/tv_powered_by"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintVertical_bias="0.1"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_sign_up" />
+
+        <ImageView
+            android:id="@+id/iv_tmdb_logo"
+            android:layout_width="@dimen/tmdb_logo_size"
+            android:layout_height="@dimen/tmdb_logo_size"
+            android:layout_marginStart="@dimen/default_margin"
+            app:layout_constraintBottom_toBottomOf="@id/tv_powered_by"
+            app:layout_constraintStart_toEndOf="@id/tv_powered_by"
+            app:layout_constraintTop_toTopOf="@id/tv_powered_by"
+            tools:src="@drawable/tmdb_logo_short"
+            tools:ignore="ContentDescription" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>

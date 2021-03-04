@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/mnu_profile_name"
+        android:title="@string/profile"
+        android:icon="@drawable/ic_user"
+        android:contentDescription="@string/profile"
+        app:showAsAction="always"/>
+
+    <item android:id="@+id/mnu_favourites"
+        android:icon="@drawable/ic_heart"
+        app:showAsAction="ifRoom"
+        android:title="@string/tab_title_favourites"
+        android:contentDescription="@string/favourite_movies"/>
+
+    <item android:id="@+id/mnu_sign_out"
+        android:icon="@drawable/ic_sign_out"
+        app:showAsAction="ifRoom"
+        android:title="@string/sign_out"
+        android:contentDescription="@string/sign_out"/>
+</menu>
