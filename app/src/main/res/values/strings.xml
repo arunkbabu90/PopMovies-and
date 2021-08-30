@@ -143,4 +143,7 @@
     <string name="feature_disabled_for_guest">This feature is only available to registered users</string>
     <string name="err_feature_disabled">This feature is disabled because your account is not verified</string>
     <string name="err_feature_disabled_short">Feature Disabled: Account Unverified</string>
+
+    <string name="pref_file_name_key">preferences</string>
+    <string name="pref_is_guest_logged_in">isGuestLoggedIn</string>
 </resources>

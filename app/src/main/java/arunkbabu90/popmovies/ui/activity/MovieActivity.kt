@@ -32,8 +32,8 @@ class MovieActivity : AppCompatActivity(), FirebaseAuth.AuthStateListener {
     private lateinit var auth: FirebaseAuth
     private lateinit var db: FirebaseFirestore
 
-    private var tabLayoutMediator: TabLayoutMediator? = null
     var networkChangeLiveData = MutableLiveData<Boolean>()
+    private var tabLayoutMediator: TabLayoutMediator? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -84,7 +84,6 @@ class MovieActivity : AppCompatActivity(), FirebaseAuth.AuthStateListener {
                     }
                     true
                 }
-
                 R.id.mnu_profile_name -> {
                     // Profile
                     if (Constants.userType == Constants.USER_TYPE_PERSON) {
@@ -99,9 +98,14 @@ class MovieActivity : AppCompatActivity(), FirebaseAuth.AuthStateListener {
                     if (Constants.userType == Constants.USER_TYPE_PERSON) {
                         auth.signOut()
                     } else {
+                        val sharedPref = getSharedPreferences(getString(R.string.pref_file_name_key), MODE_PRIVATE)
+                        with(sharedPref.edit()) {
+                            putBoolean(getString(R.string.pref_is_guest_logged_in), false)
+                            apply()
+                        }
+
                         startActivity(Intent(this, LoginActivity::class.java))
-                        Toast.makeText(this, getString(R.string.signed_out), Toast.LENGTH_SHORT)
-                            .show()
+                        Toast.makeText(this, getString(R.string.signed_out), Toast.LENGTH_SHORT).show()
                         finish()
                     }
                     true
@@ -266,7 +270,6 @@ class MovieActivity : AppCompatActivity(), FirebaseAuth.AuthStateListener {
                 }
         }
     }
-
 
     /**
      * Register a callback to be invoked when network connectivity changes

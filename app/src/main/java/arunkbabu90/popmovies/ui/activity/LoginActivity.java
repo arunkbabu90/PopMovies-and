@@ -1,6 +1,7 @@
 package arunkbabu90.popmovies.ui.activity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.Network;
 import android.net.NetworkCapabilities;
@@ -48,6 +49,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnFocusChan
     private ConnectivityManager mConnectivityManager;
     private FirebaseFirestore mDb;
     private FirebaseUser mUser;
+    private SharedPreferences sharedPref;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +60,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnFocusChan
         } catch (DatabaseException e) {
             e.printStackTrace();
         }
+        // Get shared preferences
+        sharedPref = getSharedPreferences(getString(R.string.pref_file_name_key), MODE_PRIVATE);
+        boolean isGuestLoggedIn = sharedPref.getBoolean(getString(R.string.pref_is_guest_logged_in), false);
 
         // Get instances
         mAuth = FirebaseAuth.getInstance();
@@ -66,24 +71,23 @@ public class LoginActivity extends AppCompatActivity implements View.OnFocusChan
         mUser = mAuth.getCurrentUser();
         if (mUser != null && Utils.isNetworkConnected(this)) {
             // Login the user, if already logged in
-            mUser.reload()
-                    .addOnSuccessListener(aVoid -> {
-                        // The result will be available in onComplete() callback
-                        // REFRESH the User
-                        mUser = mAuth.getCurrentUser();
-                        if (mUser != null) {
-                            mDb.collection(Constants.COLLECTION_USERS)
-                                    .document(mUser.getUid())
-                                    .get().addOnCompleteListener(LoginActivity.this);
-                        }
-                    });
+            mUser.reload().addOnSuccessListener(aVoid -> {
+                // The result will be available in onComplete() callback
+                // REFRESH the User
+                mUser = mAuth.getCurrentUser();
+                if (mUser != null) {
+                    mDb.collection(Constants.COLLECTION_USERS)
+                            .document(mUser.getUid())
+                            .get().addOnCompleteListener(LoginActivity.this);
+                }
+            });
         } else if (mUser != null && !Utils.isNetworkConnected(this)) {
             // If the user is already logged in even though there is no network, load the profile
             // from cache
             mDb.collection(Constants.COLLECTION_USERS).document(mUser.getUid()).get()
-                    .addOnSuccessListener(documentSnapshot -> {
-                        startMovieActivity(Constants.USER_TYPE_PERSON);
-                    });
+                    .addOnSuccessListener(documentSnapshot -> startMovieActivity(Constants.USER_TYPE_PERSON));
+        } else if (isGuestLoggedIn) {
+            startMovieActivity(Constants.USER_TYPE_GUEST);
         } else {
             // User not logged in. So show the login screen
             setTheme(R.style.Theme_PopMovies);
@@ -158,7 +162,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnFocusChan
                         if (task.isSuccessful()) {
                             // Login Success
                             mErrorTextView.setVisibility(View.INVISIBLE);
-
                             FirebaseUser user = mAuth.getCurrentUser();
                             if (user != null) {
                                 // The result will be available in onComplete() callback
@@ -306,6 +309,12 @@ public class LoginActivity extends AppCompatActivity implements View.OnFocusChan
     private void startMovieActivity(int userType) {
         if (mLoginProgressBar != null) mLoginProgressBar.setVisibility(View.GONE);
         if (mLoginButton != null) mLoginButton.setClickable(true);
+
+        if (sharedPref != null && userType == Constants.USER_TYPE_GUEST) {
+            SharedPreferences.Editor editor = sharedPref.edit();
+            editor.putBoolean(getString(R.string.pref_is_guest_logged_in), true);
+            editor.apply();
+        }
 
         Constants.setUserType(userType);
         startActivity(new Intent(this, MovieActivity.class));
