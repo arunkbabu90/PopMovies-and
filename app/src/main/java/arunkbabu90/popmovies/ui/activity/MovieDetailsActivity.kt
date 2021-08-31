@@ -30,6 +30,7 @@ import arunkbabu90.popmovies.getImageUrl
 import arunkbabu90.popmovies.ui.adapter.CastCrewAdapter
 import arunkbabu90.popmovies.ui.adapter.CompaniesAdapter
 import arunkbabu90.popmovies.ui.adapter.VideoAdapter
+import arunkbabu90.popmovies.ui.dialogs.PersonDetailsDialog
 import arunkbabu90.popmovies.ui.viewmodel.CastCrewViewModel
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.CustomTarget
@@ -53,22 +54,9 @@ class MovieDetailsActivity : AppCompatActivity(), View.OnClickListener {
     private lateinit var db: FirebaseFirestore
     private lateinit var auth: FirebaseAuth
 
-    private var castList = arrayListOf<Person>()
-    private var crewList = arrayListOf<Person>()
+    private var castList = arrayListOf<Person?>()
+    private var crewList = arrayListOf<Person?>()
     private var videoList = arrayListOf<Video>()
-
-    private var prevCrew: Person = Person("", "", "", "")
-
-    companion object {
-        const val KEY_MOVIE_ID_EXTRA = "movieIdExtraKey"
-        const val KEY_POSTER_PATH_EXTRA = "posterPathExtraKey"
-        const val KEY_BACKDROP_PATH_EXTRA = "backdropPathExtraKey"
-        const val KEY_RELEASE_DATE_EXTRA = "releaseDateExtraKey"
-        const val KEY_RATING_EXTRA = "ratingExtraKey"
-        const val KEY_OVERVIEW_EXTRA = "overviewExtraKey"
-        const val KEY_TITLE_EXTRA = "titleExtraKey"
-    }
-
     private var movieId = -1
     private var posterPath = ""
     private var coverPath = ""
@@ -79,6 +67,20 @@ class MovieDetailsActivity : AppCompatActivity(), View.OnClickListener {
 
     private var isFavourite = false
     private var isFavLoaded = false
+
+    private var prevCrew: Person = Person(name = "", department = "")
+
+    companion object {
+        const val KEY_MOVIE_ID_EXTRA = "movieIdExtraKey"
+        const val KEY_POSTER_PATH_EXTRA = "posterPathExtraKey"
+        const val KEY_BACKDROP_PATH_EXTRA = "backdropPathExtraKey"
+        const val KEY_RELEASE_DATE_EXTRA = "releaseDateExtraKey"
+        const val KEY_RATING_EXTRA = "ratingExtraKey"
+        const val KEY_OVERVIEW_EXTRA = "overviewExtraKey"
+        const val KEY_TITLE_EXTRA = "titleExtraKey"
+
+        private const val PERSON_DIALOG_TAG = "personDialogTag"
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -310,6 +312,20 @@ class MovieDetailsActivity : AppCompatActivity(), View.OnClickListener {
 
             if (state == NetworkState.LOADING) {}
         })
+
+        castAdapter.itemClickListener = object : CastCrewAdapter.ItemClickListener {
+            override fun onPersonClick(position: Int, person: Person) {
+                val dialog = PersonDetailsDialog(person)
+                dialog.show(supportFragmentManager, PERSON_DIALOG_TAG)
+            }
+        }
+
+        crewAdapter.itemClickListener = object : CastCrewAdapter.ItemClickListener {
+            override fun onPersonClick(position: Int, person: Person) {
+                val dialog = PersonDetailsDialog(person)
+                dialog.show(supportFragmentManager, PERSON_DIALOG_TAG)
+            }
+        }
     }
 
     /**

@@ -146,4 +146,5 @@
 
     <string name="pref_file_name_key">preferences</string>
     <string name="pref_is_guest_logged_in">isGuestLoggedIn</string>
+    <string name="profile_picture">Profile Picture</string>
 </resources>

@@ -13,8 +13,9 @@ import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import kotlinx.android.synthetic.main.item_person.view.*
 
 class CastCrewAdapter(private val isCast: Boolean = false,
-                      private val personList: ArrayList<Person>)
-    : RecyclerView.Adapter<CastCrewAdapter.CastCrewViewHolder>() {
+                      private val personList: ArrayList<Person?>,
+) : RecyclerView.Adapter<CastCrewAdapter.CastCrewViewHolder>() {
+    var itemClickListener: ItemClickListener? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CastCrewViewHolder {
         val view = parent.inflate(R.layout.item_person)
@@ -22,14 +23,17 @@ class CastCrewAdapter(private val isCast: Boolean = false,
     }
 
     override fun onBindViewHolder(holder: CastCrewViewHolder, position: Int) {
-        holder.bind(personList[position])
+        val person = personList[position]
+
+        if (person != null)
+            holder.bind(person)
     }
 
     override fun getItemCount() = personList.size
 
     inner class CastCrewViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        fun bind(person: Person?) {
-            val dpUrl = getImageUrl(person?.dpPath ?: "", IMG_SIZE_MID)
+        fun bind(person: Person) {
+            val dpUrl = getImageUrl(person.dpPath ?: "", IMG_SIZE_MID)
             Glide.with(itemView.context)
                 .load(dpUrl)
                 .transition(DrawableTransitionOptions.withCrossFade())
@@ -38,13 +42,21 @@ class CastCrewAdapter(private val isCast: Boolean = false,
 
             if (isCast) {
                 // Cast
-                itemView.itemPerson_name.text = person?.name
-                itemView.itemPerson_designation.text = person?.characterName
+                itemView.itemPerson_name.text = person.name
+                itemView.itemPerson_designation.text = person.characterName
             } else {
                 // Crew
-                itemView.itemPerson_name.text = person?.name
-                itemView.itemPerson_designation.text = person?.department
+                itemView.itemPerson_name.text = person.name
+                itemView.itemPerson_designation.text = person.department
+            }
+
+            itemView.setOnClickListener {
+                itemClickListener?.onPersonClick(absoluteAdapterPosition, person)
             }
         }
+    }
+
+    interface ItemClickListener {
+        fun onPersonClick(position: Int, person: Person)
     }
 }
