@@ -14,13 +14,13 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import arunkbabu90.filimibeat.ui.viewmodel.FavouritesViewModel
 import arunkbabu90.popmovies.Constants
 import arunkbabu90.popmovies.R
 import arunkbabu90.popmovies.data.model.Favourite
 import arunkbabu90.popmovies.data.model.FavouritesLiveData
 import arunkbabu90.popmovies.ui.activity.MovieDetailsActivity
 import arunkbabu90.popmovies.ui.adapter.FavouritesAdapter
+import arunkbabu90.popmovies.ui.viewmodel.FavouritesViewModel
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseUser

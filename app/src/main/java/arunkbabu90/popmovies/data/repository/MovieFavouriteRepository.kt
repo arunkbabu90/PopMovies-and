@@ -1,9 +1,9 @@
 package arunkbabu90.popmovies.data.repository
 
-import arunkbabu90.filimibeat.ui.viewmodel.FavouritesViewModel
 import arunkbabu90.popmovies.Constants
 import arunkbabu90.popmovies.data.api.PAGE_SIZE
 import arunkbabu90.popmovies.data.model.FavouritesLiveData
+import arunkbabu90.popmovies.ui.viewmodel.FavouritesViewModel
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.DocumentSnapshot

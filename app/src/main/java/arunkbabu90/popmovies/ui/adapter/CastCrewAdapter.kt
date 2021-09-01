@@ -13,7 +13,7 @@ import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import kotlinx.android.synthetic.main.item_person.view.*
 
 class CastCrewAdapter(private val isCast: Boolean = false,
-                      private val personList: ArrayList<Person?>,
+                      private val personList: ArrayList<Person>,
 ) : RecyclerView.Adapter<CastCrewAdapter.CastCrewViewHolder>() {
     var itemClickListener: ItemClickListener? = null
 
@@ -24,9 +24,7 @@ class CastCrewAdapter(private val isCast: Boolean = false,
 
     override fun onBindViewHolder(holder: CastCrewViewHolder, position: Int) {
         val person = personList[position]
-
-        if (person != null)
-            holder.bind(person)
+        holder.bind(person)
     }
 
     override fun getItemCount() = personList.size

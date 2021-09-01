@@ -7,13 +7,13 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import arunkbabu90.filimibeat.ui.viewmodel.ReviewViewModel
 import arunkbabu90.popmovies.R
 import arunkbabu90.popmovies.data.api.TMDBClient
 import arunkbabu90.popmovies.data.repository.NetworkState
 import arunkbabu90.popmovies.data.repository.ReviewRepository
 import arunkbabu90.popmovies.databinding.ActivityReviewsBinding
 import arunkbabu90.popmovies.ui.adapter.ReviewAdapter
+import arunkbabu90.popmovies.ui.viewmodel.ReviewViewModel
 
 class ReviewsActivity : AppCompatActivity() {
     private lateinit var repository: ReviewRepository

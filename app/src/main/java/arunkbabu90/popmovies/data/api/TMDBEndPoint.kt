@@ -34,4 +34,7 @@ interface TMDBEndPoint {
     @GET("movie/{movie_id}/reviews")
     fun getReviews(@Path("movie_id") movieId: Int,
                    @Query("page") page: Int): Single<ReviewResponse>
+
+    @GET("person/{person_id}")
+    fun getPersonDetails(@Path("person_id") personId: Int) : Single<PersonDetails>
 }

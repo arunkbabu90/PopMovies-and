@@ -1,4 +1,4 @@
-package arunkbabu90.filimibeat.ui.viewmodel
+package arunkbabu90.popmovies.ui.viewmodel
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel

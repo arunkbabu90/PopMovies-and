@@ -15,7 +15,6 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.LinearLayoutManager
-import arunkbabu90.filimibeat.*
 import arunkbabu90.popmovies.*
 import arunkbabu90.popmovies.databinding.ActivityProfileBinding
 import arunkbabu90.popmovies.ui.adapter.ProfileAdapter

@@ -12,7 +12,6 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
-import arunkbabu90.filimibeat.ui.viewmodel.SearchMovieViewModel
 import arunkbabu90.popmovies.R
 import arunkbabu90.popmovies.calculateNoOfColumns
 import arunkbabu90.popmovies.closeSoftInput
@@ -24,6 +23,7 @@ import arunkbabu90.popmovies.data.repository.NetworkState
 import arunkbabu90.popmovies.getShortDate
 import arunkbabu90.popmovies.ui.activity.MovieDetailsActivity
 import arunkbabu90.popmovies.ui.adapter.MovieAdapter
+import arunkbabu90.popmovies.ui.viewmodel.SearchMovieViewModel
 import kotlinx.android.synthetic.main.fragment_search.*
 import kotlinx.android.synthetic.main.item_movie.*
 import kotlinx.android.synthetic.main.item_network_state.*

@@ -13,7 +13,6 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
-import arunkbabu90.filimibeat.ui.viewmodel.TopRatedMovieViewModel
 import arunkbabu90.popmovies.R
 import arunkbabu90.popmovies.calculateNoOfColumns
 import arunkbabu90.popmovies.data.api.TMDBClient
@@ -26,6 +25,7 @@ import arunkbabu90.popmovies.isNetworkConnected
 import arunkbabu90.popmovies.ui.activity.MovieActivity
 import arunkbabu90.popmovies.ui.activity.MovieDetailsActivity
 import arunkbabu90.popmovies.ui.adapter.MovieAdapter
+import arunkbabu90.popmovies.ui.viewmodel.TopRatedMovieViewModel
 import kotlinx.android.synthetic.main.fragment_movies_list.*
 import kotlinx.android.synthetic.main.item_movie.*
 import kotlinx.android.synthetic.main.item_network_state.*

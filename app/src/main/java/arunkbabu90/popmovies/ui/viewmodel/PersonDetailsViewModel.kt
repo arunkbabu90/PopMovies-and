@@ -2,20 +2,22 @@ package arunkbabu90.popmovies.ui.viewmodel
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
-import arunkbabu90.popmovies.data.model.MovieDetails
-import arunkbabu90.popmovies.data.repository.MovieDetailsRepository
+import arunkbabu90.popmovies.data.model.PersonDetails
 import arunkbabu90.popmovies.data.repository.NetworkState
+import arunkbabu90.popmovies.data.repository.PersonDetailsRepository
 import io.reactivex.disposables.CompositeDisposable
 
-class MovieDetailsViewModel(private val repository: MovieDetailsRepository, movieId: Int) : ViewModel() {
+class PersonDetailsViewModel(private val repository: PersonDetailsRepository,
+                             personId: Int
+) : ViewModel() {
     private val disposable = CompositeDisposable()
 
-    val movieDetails: LiveData<MovieDetails> by lazy {
-        repository.fetchMovieDetails(disposable, movieId)
+    val personDetails: LiveData<PersonDetails> by lazy {
+        repository.fetchMovieDetails(disposable, personId)
     }
 
     val networkState: LiveData<NetworkState> by lazy {
-        repository.getNetworkState()
+        repository.networkState()
     }
 
     override fun onCleared() {

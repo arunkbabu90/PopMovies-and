@@ -7,11 +7,10 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import arunkbabu90.filimibeat.ui.viewmodel.MovieDetailsViewModel
-import arunkbabu90.filimibeat.ui.viewmodel.VideoViewModel
 import arunkbabu90.popmovies.Constants
 import arunkbabu90.popmovies.R
 import arunkbabu90.popmovies.data.api.IMG_SIZE_LARGE
@@ -32,6 +31,8 @@ import arunkbabu90.popmovies.ui.adapter.CompaniesAdapter
 import arunkbabu90.popmovies.ui.adapter.VideoAdapter
 import arunkbabu90.popmovies.ui.dialogs.PersonDetailsDialog
 import arunkbabu90.popmovies.ui.viewmodel.CastCrewViewModel
+import arunkbabu90.popmovies.ui.viewmodel.MovieDetailsViewModel
+import arunkbabu90.popmovies.ui.viewmodel.VideoViewModel
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
@@ -54,8 +55,8 @@ class MovieDetailsActivity : AppCompatActivity(), View.OnClickListener {
     private lateinit var db: FirebaseFirestore
     private lateinit var auth: FirebaseAuth
 
-    private var castList = arrayListOf<Person?>()
-    private var crewList = arrayListOf<Person?>()
+    private var castList = arrayListOf<Person>()
+    private var crewList = arrayListOf<Person>()
     private var videoList = arrayListOf<Video>()
     private var movieId = -1
     private var posterPath = ""
@@ -69,6 +70,7 @@ class MovieDetailsActivity : AppCompatActivity(), View.OnClickListener {
     private var isFavLoaded = false
 
     private var prevCrew: Person = Person(name = "", department = "")
+    private val TAG = MovieDetailsActivity::class.java.simpleName
 
     companion object {
         const val KEY_MOVIE_ID_EXTRA = "movieIdExtraKey"
@@ -303,27 +305,56 @@ class MovieDetailsActivity : AppCompatActivity(), View.OnClickListener {
             }
         })
 
-        // TODO: Implement Error Checking
         // Network State
         viewModel.networkState.observe(this, { state ->
-            if (state == NetworkState.ERROR) {}
+            if (state == NetworkState.ERROR) {
+                binding.layoutCast.rvCrew.isVisible = false
+                binding.layoutCast.crewTitle.isVisible = false
 
-            if (state == NetworkState.LOADED) {}
+                binding.layoutCast.rvCast.isVisible = false
+                binding.layoutCast.castTitle.isVisible = false
+            }
 
-            if (state == NetworkState.LOADING) {}
+            if (state == NetworkState.LOADED) {
+                binding.layoutCast.rvCrew.isVisible = true
+                binding.layoutCast.crewTitle.isVisible = true
+
+                binding.layoutCast.rvCast.isVisible = true
+                binding.layoutCast.castTitle.isVisible = true
+            }
+
+            if (state == NetworkState.LOADING) {
+                binding.layoutCast.rvCrew.isVisible = false
+                binding.layoutCast.crewTitle.isVisible = false
+
+                binding.layoutCast.rvCast.isVisible = false
+                binding.layoutCast.castTitle.isVisible = false
+            }
         })
 
         castAdapter.itemClickListener = object : CastCrewAdapter.ItemClickListener {
             override fun onPersonClick(position: Int, person: Person) {
-                val dialog = PersonDetailsDialog(person)
-                dialog.show(supportFragmentManager, PERSON_DIALOG_TAG)
+                val dialog = PersonDetailsDialog(person, true)
+                val transaction = supportFragmentManager.beginTransaction()
+                transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+
+                transaction
+                    .add(android.R.id.content, dialog)
+                    .addToBackStack(null)
+                    .commit()
             }
         }
 
         crewAdapter.itemClickListener = object : CastCrewAdapter.ItemClickListener {
             override fun onPersonClick(position: Int, person: Person) {
-                val dialog = PersonDetailsDialog(person)
-                dialog.show(supportFragmentManager, PERSON_DIALOG_TAG)
+                val dialog = PersonDetailsDialog(person, false)
+                val transaction = supportFragmentManager.beginTransaction()
+                transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+
+                transaction
+                    .add(android.R.id.content, dialog)
+                    .addToBackStack(null)
+                    .commit()
             }
         }
     }
