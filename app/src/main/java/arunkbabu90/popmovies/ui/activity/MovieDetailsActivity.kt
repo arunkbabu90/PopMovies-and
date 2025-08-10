@@ -2,11 +2,12 @@ package arunkbabu90.popmovies.ui.activity
 
 import android.content.Intent
 import android.graphics.drawable.Drawable
-import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.net.toUri
+import androidx.core.view.isVisible
 import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -264,73 +265,82 @@ class MovieDetailsActivity : AppCompatActivity(), View.OnClickListener {
         // Populate Cast and Crew
         val castAdapter = CastCrewAdapter(true, castList)
         val crewAdapter = CastCrewAdapter(false, crewList)
+        with(binding) {
+            layoutCast.rvCrew.layoutManager = LinearLayoutManager(
+                this@MovieDetailsActivity,
+                LinearLayoutManager.HORIZONTAL,
+                false
+            )
+            layoutCast.rvCrew.setHasFixedSize(true)
+            layoutCast.rvCrew.adapter = crewAdapter
 
-        binding.layoutCast.rvCrew.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
-        binding.layoutCast.rvCrew.setHasFixedSize(true)
-        binding.layoutCast.rvCrew.adapter = crewAdapter
+            layoutCast.rvCast.layoutManager = LinearLayoutManager(
+                this@MovieDetailsActivity,
+                LinearLayoutManager.HORIZONTAL,
+                false
+            )
+            layoutCast.rvCast.setHasFixedSize(true)
+            layoutCast.rvCast.adapter = castAdapter
 
-        binding.layoutCast.rvCast.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
-        binding.layoutCast.rvCast.setHasFixedSize(true)
-        binding.layoutCast.rvCast.adapter = castAdapter
+            // Cast & Crew Details
+            val viewModel: CastCrewViewModel = getCastCrewViewModel(movieId)
+            viewModel.castCrewList.observe(this@MovieDetailsActivity, { castCrewResponse ->
+                val casts = castCrewResponse.castList
 
-        // Cast & Crew Details
-        val viewModel: CastCrewViewModel = getCastCrewViewModel(movieId)
-        viewModel.castCrewList.observe(this, { castCrewResponse ->
-            val casts = castCrewResponse.castList
+                // Filter crew to avoid redundant persons
+                val filteredCrew = castCrewResponse.crewList.filter { crew ->
+                    val predicate = (crew.name != prevCrew.name) && (crew.department != prevCrew.department)
+                    prevCrew = crew
+                    return@filter predicate
+                }
 
-            // Filter crew to avoid redundant persons
-            val filteredCrew = castCrewResponse.crewList.filter { crew ->
-                val predicate = (crew.name != prevCrew.name) && (crew.department != prevCrew.department)
-                prevCrew = crew
-                return@filter predicate
-            }
+                // Cast
+                if (casts.isEmpty()) {
+                    // Cast list empty so hide the related layout elements
+                    layoutCast.rvCast.visibility = View.GONE
+                    layoutCast.castTitle.visibility = View.GONE
+                } else {
+                    castList.addAll(casts)
+                    castAdapter.notifyDataSetChanged()
+                }
 
-            // Cast
-            if (casts.isNullOrEmpty()) {
-                // Cast list empty so hide the related layout elements
-                binding.layoutCast.rvCast.visibility = View.GONE
-                binding.layoutCast.castTitle.visibility = View.GONE
-            } else {
-                castList.addAll(casts)
-                castAdapter.notifyDataSetChanged()
-            }
+                // Crew
+                if (filteredCrew.isEmpty()) {
+                    layoutCast.rvCrew.visibility = View.GONE
+                    layoutCast.crewTitle.visibility = View.GONE
+                } else {
+                    crewList.addAll(filteredCrew)
+                    crewAdapter.notifyDataSetChanged()
+                }
+            })
 
-            // Crew
-            if (filteredCrew.isNullOrEmpty()) {
-                binding.layoutCast.rvCrew.visibility = View.GONE
-                binding.layoutCast.crewTitle.visibility = View.GONE
-            } else {
-                crewList.addAll(filteredCrew)
-                crewAdapter.notifyDataSetChanged()
-            }
-        })
+            // Network State
+            viewModel.networkState.observe(this@MovieDetailsActivity, { state ->
+                if (state == NetworkState.ERROR) {
+                    layoutCast.rvCrew.isVisible = false
+                    layoutCast.crewTitle.isVisible = false
 
-        // Network State
-        viewModel.networkState.observe(this, { state ->
-            if (state == NetworkState.ERROR) {
-                binding.layoutCast.rvCrew.isVisible = false
-                binding.layoutCast.crewTitle.isVisible = false
+                    layoutCast.rvCast.isVisible = false
+                    layoutCast.castTitle.isVisible = false
+                }
 
-                binding.layoutCast.rvCast.isVisible = false
-                binding.layoutCast.castTitle.isVisible = false
-            }
+                if (state == NetworkState.LOADED) {
+                    layoutCast.rvCrew.isVisible = true
+                    layoutCast.crewTitle.isVisible = true
 
-            if (state == NetworkState.LOADED) {
-                binding.layoutCast.rvCrew.isVisible = true
-                binding.layoutCast.crewTitle.isVisible = true
+                    layoutCast.rvCast.isVisible = true
+                    layoutCast.castTitle.isVisible = true
+                }
 
-                binding.layoutCast.rvCast.isVisible = true
-                binding.layoutCast.castTitle.isVisible = true
-            }
+                if (state == NetworkState.LOADING) {
+                    layoutCast.rvCrew.isVisible = false
+                    layoutCast.crewTitle.isVisible = false
 
-            if (state == NetworkState.LOADING) {
-                binding.layoutCast.rvCrew.isVisible = false
-                binding.layoutCast.crewTitle.isVisible = false
-
-                binding.layoutCast.rvCast.isVisible = false
-                binding.layoutCast.castTitle.isVisible = false
-            }
-        })
+                    layoutCast.rvCast.isVisible = false
+                    layoutCast.castTitle.isVisible = false
+                }
+            })
+        }
 
         castAdapter.itemClickListener = object : CastCrewAdapter.ItemClickListener {
             override fun onPersonClick(position: Int, person: Person) {
@@ -365,7 +375,7 @@ class MovieDetailsActivity : AppCompatActivity(), View.OnClickListener {
      */
     private fun populateProductionCompanies(companyList: List<Company>) {
         // Populate Production Companies
-        if (companyList.isNullOrEmpty()) {
+        if (companyList.isEmpty()) {
             // No companies to show so hide the layout
             binding.layoutCompany.root.visibility = View.GONE
         }
@@ -392,7 +402,7 @@ class MovieDetailsActivity : AppCompatActivity(), View.OnClickListener {
         viewModel.videoList.observe(this, { videoResponse ->
             // Populate the videos to the adapter
             val videos = videoResponse.videos
-            if (videos.isNullOrEmpty())
+            if (videos.isEmpty())
                 binding.layoutVideos.root.visibility = View.GONE
 
             videoList.addAll(videos)
@@ -416,7 +426,7 @@ class MovieDetailsActivity : AppCompatActivity(), View.OnClickListener {
     private fun onVideoClick(videoUrl: String) {
         // Open an intent to Play the Video using external player
         val playVideoIntent = Intent(Intent.ACTION_VIEW)
-        playVideoIntent.data = Uri.parse(videoUrl)
+        playVideoIntent.data = videoUrl.toUri()
         startActivity(playVideoIntent)
     }
 
@@ -442,7 +452,7 @@ class MovieDetailsActivity : AppCompatActivity(), View.OnClickListener {
     private fun getMovieDetailsViewModel(movieId: Int): MovieDetailsViewModel {
         return ViewModelProvider(this, object : ViewModelProvider.Factory {
             @Suppress("UNCHECKED_CAST")
-            override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+            override fun <T : ViewModel> create(modelClass: Class<T>): T {
                 return MovieDetailsViewModel(movieDetailsRepository, movieId) as T
             }
         })[MovieDetailsViewModel::class.java]
@@ -454,7 +464,7 @@ class MovieDetailsActivity : AppCompatActivity(), View.OnClickListener {
     private fun getCastCrewViewModel(movieId: Int): CastCrewViewModel {
         return ViewModelProvider(this, object: ViewModelProvider.Factory {
             @Suppress("UNCHECKED_CAST")
-            override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+            override fun <T : ViewModel> create(modelClass: Class<T>): T {
                 return CastCrewViewModel(castCrewRepository, movieId) as T
             }
         })[CastCrewViewModel::class.java]
@@ -466,7 +476,7 @@ class MovieDetailsActivity : AppCompatActivity(), View.OnClickListener {
     private fun getVideoViewModel(movieId: Int): VideoViewModel {
         return ViewModelProvider(this, object: ViewModelProvider.Factory {
             @Suppress("UNCHECKED_CAST")
-            override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+            override fun <T : ViewModel> create(modelClass: Class<T>): T {
                 return VideoViewModel(videoRepository, movieId) as T
             }
         })[VideoViewModel::class.java]

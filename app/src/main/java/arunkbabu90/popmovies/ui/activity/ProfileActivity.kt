@@ -4,7 +4,11 @@ import android.app.Activity
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
-import android.net.*
+import android.net.ConnectivityManager
+import android.net.Network
+import android.net.NetworkCapabilities
+import android.net.NetworkRequest
+import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
@@ -15,8 +19,12 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.LinearLayoutManager
-import arunkbabu90.popmovies.*
+import arunkbabu90.popmovies.Constants
+import arunkbabu90.popmovies.R
 import arunkbabu90.popmovies.databinding.ActivityProfileBinding
+import arunkbabu90.popmovies.isNetworkConnected
+import arunkbabu90.popmovies.resize
+import arunkbabu90.popmovies.runStackedRevealAnimation
 import arunkbabu90.popmovies.ui.adapter.ProfileAdapter
 import arunkbabu90.popmovies.ui.dialogs.SimpleInputDialog
 import com.bumptech.glide.Glide
@@ -34,10 +42,8 @@ import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.UploadTask
 import com.google.firebase.storage.ktx.storage
-import kotlinx.android.synthetic.main.activity_profile.*
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
-import java.util.*
 
 class ProfileActivity : AppCompatActivity(), View.OnClickListener {
     private lateinit var binding: ActivityProfileBinding
@@ -383,7 +389,7 @@ class ProfileActivity : AppCompatActivity(), View.OnClickListener {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == REQUEST_CODE_PICK_IMAGE && resultCode == Activity.RESULT_OK) {
+        if (requestCode == REQUEST_CODE_PICK_IMAGE && resultCode == RESULT_OK) {
             val uri = data?.data
             if (uri != null) {
                 if (isNetworkConnected(this)) {

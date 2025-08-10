@@ -2,7 +2,11 @@ package arunkbabu90.popmovies.ui.dialogs
 
 import android.app.Dialog
 import android.os.Bundle
-import android.view.*
+import android.view.Gravity
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.view.Window
 import androidx.core.view.isVisible
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModel
@@ -117,7 +121,7 @@ class PersonDetailsDialog(private val person: Person,
 
     private fun getViewModel(personId: Int): PersonDetailsViewModel {
         return ViewModelProvider(this, object : ViewModelProvider.Factory {
-            override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+            override fun <T : ViewModel> create(modelClass: Class<T>): T {
                 @Suppress("UNCHECKED_CAST")
                 return PersonDetailsViewModel(repository, personId) as T
             }

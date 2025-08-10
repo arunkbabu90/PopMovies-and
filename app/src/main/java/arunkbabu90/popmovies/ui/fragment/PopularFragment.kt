@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.app.ActivityOptionsCompat
 import androidx.core.view.ViewCompat
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -19,27 +20,28 @@ import arunkbabu90.popmovies.data.api.TMDBEndPoint
 import arunkbabu90.popmovies.data.model.Movie
 import arunkbabu90.popmovies.data.repository.MoviePopularRepository
 import arunkbabu90.popmovies.data.repository.NetworkState
+import arunkbabu90.popmovies.databinding.FragmentMoviesListBinding
 import arunkbabu90.popmovies.getShortDate
 import arunkbabu90.popmovies.isNetworkConnected
 import arunkbabu90.popmovies.ui.activity.MovieActivity
 import arunkbabu90.popmovies.ui.activity.MovieDetailsActivity
 import arunkbabu90.popmovies.ui.adapter.MovieAdapter
 import arunkbabu90.popmovies.ui.viewmodel.PopularMovieViewModel
-import kotlinx.android.synthetic.main.fragment_movies_list.*
-import kotlinx.android.synthetic.main.item_movie.*
-import kotlinx.android.synthetic.main.item_network_state.*
-import kotlin.concurrent.thread
 
 class PopularFragment : Fragment() {
+    private var _binding: FragmentMoviesListBinding? = null
+    private val binding get() = _binding!!
+
     private lateinit var repository: MoviePopularRepository
+    private lateinit var viewModel: PopularMovieViewModel
     private var adapter: MovieAdapter? = null
     private var isLoaded: Boolean = false
 
     private val TAG = PopularFragment::class.simpleName
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_movies_list, container, false)
+        _binding = FragmentMoviesListBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -47,54 +49,60 @@ class PopularFragment : Fragment() {
 
         val apiService: TMDBEndPoint = TMDBClient.getClient()
         repository = MoviePopularRepository(apiService)
+        viewModel = getViewModel()
 
         val noOfCols: Int = calculateNoOfColumns(context)
 
         val lm = GridLayoutManager(context, noOfCols)
-        adapter = MovieAdapter { movie -> if (movie != null) onMovieClick(movie) }
+        adapter = MovieAdapter { movie, posterView -> if (movie != null) onMovieClick(movie, posterView) }
         lm.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
             override fun getSpanSize(position: Int): Int {
                 val viewType = adapter?.getItemViewType(position)
                 return if (viewType == adapter?.VIEW_TYPE_MOVIE) 1 else noOfCols
             }
         }
-        rv_movie_list?.setHasFixedSize(true)
-        rv_movie_list?.layoutManager = lm
-        rv_movie_list?.adapter = adapter
+        binding.rvMovieList.setHasFixedSize(true)
+        binding.rvMovieList.layoutManager = lm
+        binding.rvMovieList.adapter = adapter
 
-        // Show status to UI accordingly
-        if (isNetworkConnected(context)) {
+        binding.swipeRefreshLayout.setOnRefreshListener {
+            isLoaded = false // Reset loaded flag to allow reloading
             loadMovies()
-        } else {
-            tv_err?.text = getString(R.string.err_no_internet)
         }
-        tv_err?.visibility = View.VISIBLE
 
-        // Network Change Live Data
-        (activity as MovieActivity).networkChangeLiveData.observe(viewLifecycleOwner, { isAvailable ->
+        if (isNetworkConnected(context)) {
+            loadMovies(true)
+        } else {
+            binding.tvErr.text = getString(R.string.err_no_internet)
+            binding.tvErr.visibility = View.VISIBLE
+        }
+
+        (activity as MovieActivity).networkChangeLiveData.observe(viewLifecycleOwner) { isAvailable ->
             if (isAvailable) {
-                loadMovies()
+                if (!isLoaded || binding.swipeRefreshLayout.isRefreshing) {
+                    loadMovies(true)
+                }
             } else {
-                tv_err?.text = getString(R.string.err_no_internet)
+                binding.tvErr.text = getString(R.string.err_no_internet)
+                binding.tvErr.visibility = View.VISIBLE
+                if (binding.swipeRefreshLayout.isRefreshing) {
+                    binding.swipeRefreshLayout.isRefreshing = false
+                }
             }
-        })
+        }
     }
 
-    /**
-     * Called when a movie item in the grid is clicked
-     * @param movie The popular movie
-     */
-    private fun onMovieClick(movie: Movie) {
+    private fun onMovieClick(movie: Movie, posterView: View?) {
         val intent = Intent(activity, MovieDetailsActivity::class.java)
-        val posterView = iv_main_poster
-        val transitionOptions: ActivityOptionsCompat? =
+        val transitionOptions: ActivityOptionsCompat? = if (posterView != null) {
             activity?.let { activity ->
                 ActivityOptionsCompat.makeSceneTransitionAnimation(
                     activity,
                     posterView,
-                    ViewCompat.getTransitionName(posterView) ?: "null"
+                    ViewCompat.getTransitionName(posterView) ?: "poster_transition"
                 )
             }
+        } else null
 
         intent.putExtra(MovieDetailsActivity.KEY_MOVIE_ID_EXTRA, movie.movieId)
         intent.putExtra(MovieDetailsActivity.KEY_POSTER_PATH_EXTRA, movie.posterPath)
@@ -110,41 +118,61 @@ class PopularFragment : Fragment() {
             startActivity(intent)
     }
 
-    /**
-     * Helper method to start loading the movies
-     */
-    private fun loadMovies() {
-        // Execute this method exactly once
-        if (isLoaded) return
+    private fun loadMovies(isShowLoadingIndicator: Boolean = false) {
+        if (isLoaded && !binding.swipeRefreshLayout.isRefreshing) {
+            return
+        }
+        binding.swipeRefreshLayout.isRefreshing = true
+        if (isShowLoadingIndicator) {
+            binding.tvErr.text = getString(R.string.loading)
+            binding.tvErr.isVisible = true
+        }
 
-        tv_err?.text = getString(R.string.loading)
-
-        val viewModel = getViewModel()
-        viewModel.popularMovies.observe(viewLifecycleOwner, { moviePagedList ->
-            thread {
-                adapter?.submitList(moviePagedList)
-                isLoaded = true
-                Log.d(TAG, "isLoaded = true")
+        viewModel.popularMovies.observe(viewLifecycleOwner) { moviePagedList ->
+            adapter?.submitList(moviePagedList)
+            isLoaded = true
+            Log.d(TAG, "isLoaded = true")
+            if (binding.swipeRefreshLayout.isRefreshing) {
+                binding.swipeRefreshLayout.isRefreshing = false
             }
-        })
+        }
 
-        viewModel.networkState.observe(viewLifecycleOwner, { state ->
-            item_network_state_progress_bar?.visibility = if (viewModel.isEmpty() && state == NetworkState.LOADING) View.VISIBLE else View.GONE
-            item_network_state_err_text_view?.visibility = if (viewModel.isEmpty() && state == NetworkState.ERROR) View.VISIBLE else View.GONE
+        viewModel.networkState.observe(viewLifecycleOwner) { state ->
+            with(binding) {
+                if (swipeRefreshLayout.isRefreshing && state != NetworkState.LOADING) {
+                    swipeRefreshLayout.isRefreshing = false
+                }
 
-            if (state == NetworkState.LOADED)
-                tv_err?.visibility = View.GONE
+                if (viewModel.isEmpty() && state == NetworkState.ERROR) {
+                    tvErr.visibility = View.VISIBLE
+                    tvErr.text = getString(R.string.err_loading_movies)
+                } else if (state == NetworkState.LOADED || !viewModel.isEmpty()) {
+                    tvErr.visibility = View.GONE
+                }
 
-            if (!viewModel.isEmpty()) {
-                adapter?.setNetworkState(state)
+                if (!swipeRefreshLayout.isRefreshing) {
+                    if (state == NetworkState.LOADING && !viewModel.isEmpty()) {
+                        adapter?.setNetworkState(state)
+                    } else if (state != NetworkState.LOADING) {
+                        adapter?.setNetworkState(state)
+                    }
+                }
             }
-        })
+        }
     }
 
     private fun getViewModel(): PopularMovieViewModel {
-        return ViewModelProvider(this, object : ViewModelProvider.Factory {
-            @Suppress("UNCHECKED_CAST")
-            override fun <T : ViewModel?> create(modelClass: Class<T>): T = PopularMovieViewModel(repository) as T
-        })[PopularMovieViewModel::class.java]
+        if (!::viewModel.isInitialized) {
+            viewModel = ViewModelProvider(this, object : ViewModelProvider.Factory {
+                @Suppress("UNCHECKED_CAST")
+                override fun <T : ViewModel> create(modelClass: Class<T>): T = PopularMovieViewModel(repository) as T
+            })[PopularMovieViewModel::class.java]
+        }
+        return viewModel
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }

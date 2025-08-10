@@ -2,7 +2,11 @@ package arunkbabu90.popmovies.ui.activity
 
 import android.graphics.drawable.Drawable
 import android.os.Bundle
-import android.view.*
+import android.view.GestureDetector
+import android.view.MotionEvent
+import android.view.ScaleGestureDetector
+import android.view.View
+import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.view.GestureDetectorCompat
@@ -108,23 +112,23 @@ class ViewPictureActivity : AppCompatActivity(), GestureDetector.OnGestureListen
         binding.ivViewPicture.y = posY
     }
 
-    override fun onTouchEvent(event: MotionEvent?): Boolean {
+    override fun onTouchEvent(event: MotionEvent): Boolean {
         scaleDetector.onTouchEvent(event)
         gestureDetector.onTouchEvent(event)
 
-        when (event?.action ?: -1 and MotionEvent.ACTION_MASK) {
+        when (event.action) {
             MotionEvent.ACTION_DOWN -> {
-                val pointerIndex = event?.actionIndex ?: 0
+                val pointerIndex = event.actionIndex
                 // Remember where we started dragging
-                lastTouchX = event?.getX(pointerIndex) ?: 0f
-                lastTouchY = event?.getY(pointerIndex) ?: 0f
+                lastTouchX = event.getX(pointerIndex)
+                lastTouchY = event.getY(pointerIndex)
                 // Save the ID of the pointer for dragging
-                activePointerId = event?.getPointerId(0) ?: -1
+                activePointerId = event.getPointerId(0)
             }
             MotionEvent.ACTION_MOVE -> {
-                val pointerIndex = event?.findPointerIndex(activePointerId) ?: 0
-                val x = event?.getX(pointerIndex) ?: 0f
-                val y = event?.getY(pointerIndex) ?: 0f
+                val pointerIndex = event.findPointerIndex(activePointerId)
+                val x = event.getX(pointerIndex)
+                val y = event.getY(pointerIndex)
 
                 // Calculate the distance moved
                 val dx = x - lastTouchX
@@ -141,14 +145,14 @@ class ViewPictureActivity : AppCompatActivity(), GestureDetector.OnGestureListen
                 lastTouchY = y
             }
             MotionEvent.ACTION_POINTER_UP -> {
-                val pointerIndex = event?.actionIndex ?: 0
-                val pointerId = event?.getPointerId(pointerIndex) ?: 0
+                val pointerIndex = event.actionIndex
+                val pointerId = event.getPointerId(pointerIndex)
 
                 if (pointerId == activePointerId) {
                     val newPointerIndex = if (pointerIndex == 0) 1 else 0
-                    lastTouchX = event?.getX(newPointerIndex) ?: 0f
-                    lastTouchY = event?.getY(newPointerIndex) ?: 0f
-                    activePointerId = event?.getPointerId(newPointerIndex) ?: -1
+                    lastTouchX = event.getX(newPointerIndex)
+                    lastTouchY = event.getY(newPointerIndex)
+                    activePointerId = event.getPointerId(newPointerIndex)
                 }
             }
             MotionEvent.ACTION_CANCEL -> {
@@ -162,8 +166,8 @@ class ViewPictureActivity : AppCompatActivity(), GestureDetector.OnGestureListen
      * The scale listener, used for handling multi-finger scale gestures
      */
     private inner class ScaleGestureListener : ScaleGestureDetector.SimpleOnScaleGestureListener() {
-        override fun onScale(detector: ScaleGestureDetector?): Boolean {
-            scaleFactor *= detector?.scaleFactor ?: 1.0f
+        override fun onScale(detector: ScaleGestureDetector): Boolean {
+            scaleFactor *= detector.scaleFactor
             scaleFactor = max(0.1f, min(scaleFactor, 10.0f))
             binding.ivViewPicture.scaleX = scaleFactor
             binding.ivViewPicture.scaleY = scaleFactor
@@ -171,15 +175,15 @@ class ViewPictureActivity : AppCompatActivity(), GestureDetector.OnGestureListen
         }
     }
 
-    override fun onDown(p0: MotionEvent?): Boolean = false
-    override fun onShowPress(p0: MotionEvent?) {}
-    override fun onLongPress(p0: MotionEvent?) { }
-    override fun onSingleTapUp(p0: MotionEvent?): Boolean = false
-    override fun onScroll(p0: MotionEvent?, p1: MotionEvent?, p2: Float, p3: Float): Boolean = false
-    override fun onFling(p0: MotionEvent?, p1: MotionEvent?, p2: Float, p3: Float): Boolean = false
-    override fun onSingleTapConfirmed(p0: MotionEvent?): Boolean = false
-    override fun onDoubleTapEvent(p0: MotionEvent?): Boolean = false
-    override fun onDoubleTap(p0: MotionEvent?): Boolean {
+    override fun onDown(p0: MotionEvent): Boolean = false
+    override fun onShowPress(p0: MotionEvent) {}
+    override fun onLongPress(p0: MotionEvent) { }
+    override fun onSingleTapUp(p0: MotionEvent): Boolean = false
+    override fun onScroll(p0: MotionEvent?, p1: MotionEvent, p2: Float, p3: Float): Boolean = false
+    override fun onFling(p0: MotionEvent?, p1: MotionEvent, p2: Float, p3: Float): Boolean = false
+    override fun onSingleTapConfirmed(p0: MotionEvent): Boolean = false
+    override fun onDoubleTapEvent(p0: MotionEvent): Boolean = false
+    override fun onDoubleTap(p0: MotionEvent): Boolean {
         resetOrZoom(p0)
         return true
     }

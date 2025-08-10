@@ -1,7 +1,7 @@
 package arunkbabu90.popmovies.data.repository
 
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.Transformations
+import androidx.lifecycle.switchMap
 import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
 import arunkbabu90.popmovies.data.api.PAGE_SIZE
@@ -24,6 +24,6 @@ class MovieNowPlayingRepository(private val apiService: TMDBEndPoint) {
     }
 
     fun getNetworkState(): LiveData<NetworkState> {
-        return Transformations.switchMap(movieDataSourceFactory.nowPlayingMoviesList, NowPlayingMovieDataSource::networkState)
+        return movieDataSourceFactory.nowPlayingMoviesList.switchMap { it.networkState }
     }
 }

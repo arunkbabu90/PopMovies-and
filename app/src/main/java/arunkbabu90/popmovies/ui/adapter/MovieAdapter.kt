@@ -1,7 +1,9 @@
 package arunkbabu90.popmovies.ui.adapter
 
+import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.ViewCompat
 import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
@@ -9,14 +11,13 @@ import arunkbabu90.popmovies.R
 import arunkbabu90.popmovies.data.api.IMG_SIZE_MID
 import arunkbabu90.popmovies.data.model.Movie
 import arunkbabu90.popmovies.data.repository.NetworkState
+import arunkbabu90.popmovies.databinding.ItemMovieBinding
+import arunkbabu90.popmovies.databinding.ItemNetworkStateBinding
 import arunkbabu90.popmovies.getImageUrl
-import arunkbabu90.popmovies.inflate
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
-import kotlinx.android.synthetic.main.item_movie.view.*
-import kotlinx.android.synthetic.main.item_network_state.view.*
 
-class MovieAdapter(private val itemClickListener: (Movie?) -> Unit)
+class MovieAdapter(private val itemClickListener: (Movie?, View?) -> Unit)
     : PagedListAdapter<Movie, RecyclerView.ViewHolder>(MovieDiffCallback()) {
 
     val VIEW_TYPE_MOVIE = 1
@@ -25,10 +26,14 @@ class MovieAdapter(private val itemClickListener: (Movie?) -> Unit)
     private var networkState: NetworkState? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        return if (viewType == VIEW_TYPE_MOVIE)
-            MovieViewHolder(parent.inflate(R.layout.item_movie))
-        else
-            NetworkStateViewHolder(parent.inflate(R.layout.item_network_state))
+        val inflater = LayoutInflater.from(parent.context)
+        return if (viewType == VIEW_TYPE_MOVIE) {
+            val binding = ItemMovieBinding.inflate(inflater, parent, false)
+            MovieViewHolder(binding)
+        } else {
+            val binding = ItemNetworkStateBinding.inflate(inflater, parent, false)
+            NetworkStateViewHolder(binding)
+        }
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
@@ -66,46 +71,48 @@ class MovieAdapter(private val itemClickListener: (Movie?) -> Unit)
     /**
      * ViewHolder for the movies
      */
-    private inner class MovieViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        fun bind(movie: Movie?, itemClickListener: (Movie?) -> Unit) {
-
+    private inner class MovieViewHolder(private val binding: ItemMovieBinding) : RecyclerView.ViewHolder(binding.root) {
+        fun bind(movie: Movie?, itemClickListener: (Movie?, View?) -> Unit) {
             val posterUrl = getImageUrl(movie?.posterPath ?: "", IMG_SIZE_MID)
-            Glide.with(itemView.context)
+            Glide.with(binding.root.context)
                 .load(posterUrl)
                 .transition(DrawableTransitionOptions.withCrossFade())
                 .error(R.drawable.ic_img_err)
-                .into(itemView.iv_main_poster)
+                .into(binding.ivMainPoster)
 
-            itemView.tv_poster_title.text = movie?.title
+            binding.tvPosterTitle.text = movie?.title
 
-            itemView.setOnClickListener { itemClickListener(movie) }
+            // Set transition name for shared element animation
+            ViewCompat.setTransitionName(binding.ivMainPoster, "poster_${movie?.movieId}")
+
+            binding.root.setOnClickListener { itemClickListener(movie, binding.ivMainPoster) }
         }
     }
 
     /**
      * ViewHolder for the Network State
      */
-    private inner class NetworkStateViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+    private inner class NetworkStateViewHolder(private val binding: ItemNetworkStateBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(networkState: NetworkState?) {
             if (networkState != null && networkState == NetworkState.LOADING) {
-                itemView.item_network_state_progress_bar.visibility = View.VISIBLE
+                binding.itemNetworkStateProgressBar.visibility = View.VISIBLE
             } else {
-                itemView.item_network_state_progress_bar.visibility = View.GONE
+                binding.itemNetworkStateProgressBar.visibility = View.GONE
             }
 
             if (networkState != null && networkState == NetworkState.ERROR) {
-                itemView.item_network_state_err_text_view.visibility = View.VISIBLE
-                itemView.item_network_state_err_text_view.text = networkState.msg
+                binding.itemNetworkStateErrTextView.visibility = View.VISIBLE
+                binding.itemNetworkStateErrTextView.text = networkState.msg
             } else if (networkState != null && networkState == NetworkState.EOL) {
-                itemView.item_network_state_err_text_view.visibility = View.VISIBLE
-                itemView.item_network_state_err_text_view.text = networkState.msg
+                binding.itemNetworkStateErrTextView.visibility = View.VISIBLE
+                binding.itemNetworkStateErrTextView.text = networkState.msg
             } else {
-                itemView.item_network_state_err_text_view.visibility = View.GONE
+                binding.itemNetworkStateErrTextView.visibility = View.GONE
             }
 
             if (networkState != null && networkState == NetworkState.CLEAR) {
-                itemView.item_network_state_err_text_view.visibility = View.VISIBLE
-                itemView.item_network_state_err_text_view.text = networkState.msg
+                binding.itemNetworkStateErrTextView.visibility = View.VISIBLE
+                binding.itemNetworkStateErrTextView.text = networkState.msg
             }
         }
     }

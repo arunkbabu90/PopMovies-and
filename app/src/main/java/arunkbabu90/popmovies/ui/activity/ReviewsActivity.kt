@@ -78,7 +78,7 @@ class ReviewsActivity : AppCompatActivity() {
     private fun getViewModel(): ReviewViewModel {
         return ViewModelProvider(this, object : ViewModelProvider.Factory {
             @Suppress("UNCHECKED_CAST")
-            override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+            override fun <T : ViewModel> create(modelClass: Class<T>): T {
                 return ReviewViewModel(repository) as T
             }
         })[ReviewViewModel::class.java]

@@ -1,19 +1,17 @@
 package arunkbabu90.popmovies.ui.adapter
 
-import android.view.View
+import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import arunkbabu90.popmovies.R
-import arunkbabu90.popmovies.inflate
-import kotlinx.android.synthetic.main.item_two_line_list.view.*
+import arunkbabu90.popmovies.databinding.ItemTwoLineListBinding
 
 class ProfileAdapter(private val data: ArrayList<Pair<String, String>>,
                      private val itemCLickListener: (Pair<String, String>) -> Unit )
     : RecyclerView.Adapter<ProfileAdapter.ProfileViewHolder>() {
-    
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProfileViewHolder {
-        val v = parent.inflate(R.layout.item_two_line_list)
-        return ProfileViewHolder(v)
+        val binding = ItemTwoLineListBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return ProfileViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: ProfileViewHolder, position: Int) {
@@ -22,13 +20,13 @@ class ProfileAdapter(private val data: ArrayList<Pair<String, String>>,
 
     override fun getItemCount(): Int = data.size
 
-    inner class ProfileViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    inner class ProfileViewHolder(private val binding: ItemTwoLineListBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(data: Pair<String, String>) {
             val (title, subtitle) = data
-            itemView.tv_twoLineList_title.text = title
-            itemView.tv_twoLineList_subtitle.text = subtitle
+            binding.tvTwoLineListTitle.text = title
+            binding.tvTwoLineListSubtitle.text = subtitle
 
-            itemView.setOnClickListener { itemCLickListener(title to subtitle) }
+            binding.root.setOnClickListener { itemCLickListener(title to subtitle) }
         }
     }
 }

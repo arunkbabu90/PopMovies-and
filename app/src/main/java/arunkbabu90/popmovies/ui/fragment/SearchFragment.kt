@@ -20,15 +20,16 @@ import arunkbabu90.popmovies.data.api.TMDBEndPoint
 import arunkbabu90.popmovies.data.model.Movie
 import arunkbabu90.popmovies.data.repository.MovieSearchRepository
 import arunkbabu90.popmovies.data.repository.NetworkState
+import arunkbabu90.popmovies.databinding.FragmentSearchBinding
 import arunkbabu90.popmovies.getShortDate
 import arunkbabu90.popmovies.ui.activity.MovieDetailsActivity
 import arunkbabu90.popmovies.ui.adapter.MovieAdapter
 import arunkbabu90.popmovies.ui.viewmodel.SearchMovieViewModel
-import kotlinx.android.synthetic.main.fragment_search.*
-import kotlinx.android.synthetic.main.item_movie.*
-import kotlinx.android.synthetic.main.item_network_state.*
 
 class SearchFragment : Fragment() {
+    private var _binding: FragmentSearchBinding? = null
+    private val binding get() = _binding!!
+
     private lateinit var repository: MovieSearchRepository
     private lateinit var viewModel: SearchMovieViewModel
     private lateinit var adapter: MovieAdapter
@@ -36,8 +37,8 @@ class SearchFragment : Fragment() {
     private var lm: GridLayoutManager? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_search, container, false)
+        _binding = FragmentSearchBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -49,65 +50,60 @@ class SearchFragment : Fragment() {
         val noOfCols = calculateNoOfColumns(context)
 
         lm = GridLayoutManager(context, noOfCols)
-        adapter = MovieAdapter { movie -> if (movie != null) onMovieClick(movie) }
-        lm!!.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
+        adapter = MovieAdapter { movie, posterView ->
+            if (movie != null) onMovieClick(movie, posterView)
+        }
+        lm?.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
             override fun getSpanSize(position: Int): Int {
                 val viewType = adapter.getItemViewType(position)
                 return if (viewType == adapter.VIEW_TYPE_MOVIE) 1 else noOfCols
             }
         }
-        rv_search_movie_list?.setHasFixedSize(true)
-        rv_search_movie_list?.layoutManager = lm
-        rv_search_movie_list?.adapter = adapter
+        binding.rvSearchMovieList.setHasFixedSize(true)
+        binding.rvSearchMovieList.layoutManager = lm
+        binding.rvSearchMovieList.adapter = adapter
 
-        tv_search_err?.visibility = View.VISIBLE
-        tv_search_err?.text = getString(R.string.search_for_movie)
+        binding.tvSearchErr.visibility = View.VISIBLE
+        binding.tvSearchErr.text = getString(R.string.search_for_movie)
 
         viewModel = getViewModel()
 
-        search_view.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+        binding.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
-                // Perform search
                 if (!query.isNullOrBlank()) {
-                    // If there is text in the search field then preform search
                     searchForMovies(query)
                     closeSoftInput(activity)
                 }
-
                 return true
             }
 
             override fun onQueryTextChange(newText: String?): Boolean {
                 if (newText.isNullOrBlank()) {
-                    // Search Field is Empty or contains solely of Spaces
                     adapter.setNetworkState(NetworkState.CLEAR)
                     adapter.submitList(null)
-                    iv_search_err?.visibility = View.VISIBLE
-                    tv_search_err?.visibility = View.VISIBLE
-                    iv_search_err?.setImageResource(R.drawable.ic_search)
-                    tv_search_err?.text = getString(R.string.search_for_movie)
+                    binding.ivSearchErr.visibility = View.VISIBLE
+                    binding.tvSearchErr.visibility = View.VISIBLE
+                    binding.ivSearchErr.setImageResource(R.drawable.ic_search)
+                    binding.tvSearchErr.text = getString(R.string.search_for_movie)
                 }
-
                 return true
             }
         })
     }
 
-    /**
-     * Called when a movie item in the grid is clicked
-     * @param movie The popular movie
-     */
-    private fun onMovieClick(movie: Movie) {
+    private fun onMovieClick(movie: Movie, posterView: View?) {
         val intent = Intent(activity, MovieDetailsActivity::class.java)
-        val posterView = iv_main_poster
-        val transitionOptions: ActivityOptionsCompat? =
+
+        // Create shared element transition with the clicked poster
+        val transitionOptions: ActivityOptionsCompat? = if (posterView != null) {
             activity?.let { activity ->
                 ActivityOptionsCompat.makeSceneTransitionAnimation(
                     activity,
                     posterView,
-                    ViewCompat.getTransitionName(posterView) ?: "null"
+                    ViewCompat.getTransitionName(posterView) ?: "poster_transition"
                 )
             }
+        } else null
 
         intent.putExtra(MovieDetailsActivity.KEY_MOVIE_ID_EXTRA, movie.movieId)
         intent.putExtra(MovieDetailsActivity.KEY_POSTER_PATH_EXTRA, movie.posterPath)
@@ -119,50 +115,56 @@ class SearchFragment : Fragment() {
 
         if (transitionOptions != null) {
             startActivity(intent, transitionOptions.toBundle())
-        }
-        else
+        } else {
             startActivity(intent)
+        }
     }
 
-    /**
-     * Initiate movie search
-     * @param searchTerm The term or movie name to search
-     */
     private fun searchForMovies(searchTerm: String) {
-        viewModel.searchMovie(searchTerm).observe(this, { moviePagedList ->
+        viewModel.searchMovie(searchTerm).observe(viewLifecycleOwner) { moviePagedList ->
             adapter.submitList(moviePagedList)
             lm?.scrollToPositionWithOffset(0,0)
 
-            if (moviePagedList.size <= 0) {
-                // Movies List Empty; No Movies Found
-                tv_search_err?.visibility = View.VISIBLE
-                tv_search_err?.text = getString(R.string.no_movies_found)
-                iv_search_err?.visibility = View.VISIBLE
-                iv_search_err?.setImageResource(R.drawable.ic_frown)
+            if (moviePagedList.isEmpty()) {
+                binding.tvSearchErr.visibility = View.VISIBLE
+                binding.tvSearchErr.text = getString(R.string.no_movies_found)
+                binding.ivSearchErr.visibility = View.VISIBLE
+                binding.ivSearchErr.setImageResource(R.drawable.ic_frown)
             } else {
-                // Movies List NOT Empty; Movies Found
-                tv_search_err?.visibility = View.GONE
-                iv_search_err?.visibility = View.GONE
+                binding.tvSearchErr.visibility = View.GONE
+                binding.ivSearchErr.visibility = View.GONE
             }
-        })
+        }
 
-        viewModel.networkState.observe(this, { state ->
-            item_network_state_progress_bar?.visibility = if (viewModel.isEmpty() && state == NetworkState.LOADING) View.VISIBLE else View.GONE
-            item_network_state_err_text_view?.visibility = if (viewModel.isEmpty() && state == NetworkState.ERROR) View.VISIBLE else View.GONE
+        viewModel.networkState.observe(viewLifecycleOwner) { state ->
+            // Show error in the existing error TextView
+            if (viewModel.isEmpty() && state == NetworkState.ERROR) {
+                binding.tvSearchErr.visibility = View.VISIBLE
+                binding.tvSearchErr.text = getString(R.string.err_loading_movies) // You may need to add this string resource
+            }
 
-            if (state == NetworkState.LOADED && !viewModel.isEmpty())
-                tv_search_err?.visibility = View.GONE
+            if (state == NetworkState.LOADED) {
+                binding.tvSearchErr.visibility = View.GONE
+            }
 
-            if (!viewModel.isEmpty()) {
+            if (state == NetworkState.LOADING && !viewModel.isEmpty()) {
+                // Show loading state for pagination
+                adapter.setNetworkState(state)
+            } else if (state != NetworkState.LOADING) {
                 adapter.setNetworkState(state)
             }
-        })
+        }
     }
 
     private fun getViewModel(): SearchMovieViewModel {
         return ViewModelProvider(this, object : ViewModelProvider.Factory {
             @Suppress("UNCHECKED_CAST")
-            override fun <T : ViewModel?> create(modelClass: Class<T>): T = SearchMovieViewModel(repository) as T
+            override fun <T : ViewModel> create(modelClass: Class<T>): T = SearchMovieViewModel(repository) as T
         })[SearchMovieViewModel::class.java]
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }

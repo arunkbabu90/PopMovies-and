@@ -25,7 +25,6 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
-import kotlinx.android.synthetic.main.activity_movie.*
 
 class MovieActivity : AppCompatActivity(), FirebaseAuth.AuthStateListener {
     private lateinit var binding: ActivityMovieBinding
@@ -56,7 +55,7 @@ class MovieActivity : AppCompatActivity(), FirebaseAuth.AuthStateListener {
         window.navigationBarColor = ActivityCompat.getColor(this, R.color.colorPurple)
 
         // Set the title of the tabs
-        tabLayoutMediator = TabLayoutMediator(movie_tab_layout, movie_view_pager) { tab, position ->
+        tabLayoutMediator = TabLayoutMediator(binding.movieTabLayout, binding.movieViewPager) { tab, position ->
             tab.text = when (position) {
                 0 -> getString(R.string.tab_title_now_playing)
                 1 -> getString(R.string.tab_title_popular)
@@ -67,8 +66,8 @@ class MovieActivity : AppCompatActivity(), FirebaseAuth.AuthStateListener {
         }
 
         val categoryAdapter = CategoryAdapter(supportFragmentManager, lifecycle)
-        movie_view_pager.adapter = categoryAdapter
-        movie_view_pager.offscreenPageLimit = 4
+        binding.movieViewPager.adapter = categoryAdapter
+        binding.movieViewPager.offscreenPageLimit = 4
 
         tabLayoutMediator?.attach()
 
@@ -204,52 +203,57 @@ class MovieActivity : AppCompatActivity(), FirebaseAuth.AuthStateListener {
      * Checks whether the email associated with this account is verified
      */
     private fun checkAccountVerificationStatus() {
-        // Check whether the email associated with the account is verified
-        val user = auth.currentUser
-        user?.reload()?.addOnSuccessListener {
-            if (user.isEmailVerified) {
-                // Email verified
-                Constants.isAccountActivated = true
+        with(binding) {
+            // Check whether the email associated with the account is verified
+            val user = auth.currentUser
+            user?.reload()?.addOnSuccessListener {
+                if (user.isEmailVerified) {
+                    // Email verified
+                    Constants.isAccountActivated = true
 
-                window.statusBarColor = ContextCompat.getColor(this, R.color.colorStatusVerified)
-                pushVerificationStatusFlag(true)
-                tv_patient_err_msg.visibility = View.VISIBLE
-                tv_patient_err_msg.setText(R.string.account_verified)
-                tv_patient_err_msg.setBackgroundColor(
-                    ContextCompat.getColor(
-                        this,
-                        R.color.colorStatusVerified
+                    window.statusBarColor =
+                        ContextCompat.getColor(this@MovieActivity, R.color.colorStatusVerified)
+                    pushVerificationStatusFlag(true)
+                    tvPatientErrMsg.visibility = View.VISIBLE
+                    tvPatientErrMsg.setText(R.string.account_verified)
+                    tvPatientErrMsg.setBackgroundColor(
+                        ContextCompat.getColor(
+                            this@MovieActivity,
+                            R.color.colorStatusVerified
+                        )
                     )
-                )
-                tv_patient_err_msg.isClickable = false
-                tv_patient_err_msg.isFocusable = false
-                Handler(Looper.getMainLooper()).postDelayed({
-                    tv_patient_err_msg.visibility = View.GONE
-                    window.statusBarColor = ContextCompat.getColor(this, R.color.colorPurpleDark)
-                }, 3000)
-            } else {
-                // Email NOT verified
-                Constants.isAccountActivated = false
-                window.statusBarColor = ContextCompat.getColor(this, R.color.colorStatusUnverified)
-                tv_patient_err_msg.visibility = View.VISIBLE
-                tv_patient_err_msg.setText(R.string.err_account_not_verified_desc)
-                tv_patient_err_msg.setBackgroundColor(
-                    ContextCompat.getColor(
-                        this,
-                        R.color.colorStatusUnverified
+                    tvPatientErrMsg.isClickable = false
+                    tvPatientErrMsg.isFocusable = false
+                    Handler(Looper.getMainLooper()).postDelayed({
+                        tvPatientErrMsg.visibility = View.GONE
+                        window.statusBarColor =
+                            ContextCompat.getColor(this@MovieActivity, R.color.colorPurpleDark)
+                    }, 3000)
+                } else {
+                    // Email NOT verified
+                    Constants.isAccountActivated = false
+                    window.statusBarColor =
+                        ContextCompat.getColor(this@MovieActivity, R.color.colorStatusUnverified)
+                    tvPatientErrMsg.visibility = View.VISIBLE
+                    tvPatientErrMsg.setText(R.string.err_account_not_verified_desc)
+                    tvPatientErrMsg.setBackgroundColor(
+                        ContextCompat.getColor(
+                            this@MovieActivity,
+                            R.color.colorStatusUnverified
+                        )
                     )
-                )
-                tv_patient_err_msg.isClickable = true
-                tv_patient_err_msg.isFocusable = true
-                tv_patient_err_msg.setOnClickListener {
-                    // Launch the Verification Activity
-                    val i = Intent(this, AccountVerificationActivity::class.java)
-                    i.putExtra(AccountVerificationActivity.KEY_USER_EMAIL, user.email)
-                    i.putExtra(
-                        AccountVerificationActivity.KEY_BACK_BUTTON_BEHAVIOUR,
-                        AccountVerificationActivity.BEHAVIOUR_CLOSE
-                    )
-                    startActivity(i)
+                    tvPatientErrMsg.isClickable = true
+                    tvPatientErrMsg.isFocusable = true
+                    tvPatientErrMsg.setOnClickListener {
+                        // Launch the Verification Activity
+                        val i = Intent(this@MovieActivity, AccountVerificationActivity::class.java)
+                        i.putExtra(AccountVerificationActivity.KEY_USER_EMAIL, user.email)
+                        i.putExtra(
+                            AccountVerificationActivity.KEY_BACK_BUTTON_BEHAVIOUR,
+                            AccountVerificationActivity.BEHAVIOUR_CLOSE
+                        )
+                        startActivity(i)
+                    }
                 }
             }
         }
