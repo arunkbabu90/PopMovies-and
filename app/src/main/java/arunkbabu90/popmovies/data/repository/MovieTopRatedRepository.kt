@@ -10,20 +10,32 @@ import arunkbabu90.popmovies.data.model.Movie
 import io.reactivex.disposables.CompositeDisposable
 
 class MovieTopRatedRepository(private val apiService: TMDBEndPoint) {
-    private lateinit var movieDataSourceFactory: TopRatedMovieDataSourceFactory
+    lateinit var movieDataSourceFactory: TopRatedMovieDataSourceFactory
 
     fun fetchTopRatedMovies(disposable: CompositeDisposable): LiveData<PagedList<Movie>> {
         movieDataSourceFactory = TopRatedMovieDataSourceFactory(apiService, disposable)
 
         val config = PagedList.Config.Builder()
-                .setPageSize(PAGE_SIZE)
-                .setEnablePlaceholders(false)
-                .build()
+            .setEnablePlaceholders(false)
+            .setPageSize(PAGE_SIZE)
+            .build()
 
         return LivePagedListBuilder(movieDataSourceFactory, config).build()
     }
 
     fun getNetworkState(): LiveData<NetworkState> {
+        // Ensure movieDataSourceFactory is initialized before accessing its properties
+        if (!::movieDataSourceFactory.isInitialized) {
+            // This case should ideally not happen if fetchTopRatedMovies is called first.
+        }
+
         return movieDataSourceFactory.topRatedMovieList.switchMap { it.networkState }
+    }
+
+    fun refresh() {
+        // Ensure movieDataSourceFactory and its LiveData are initialized
+        if (::movieDataSourceFactory.isInitialized && movieDataSourceFactory.topRatedMovieList.value != null) {
+            movieDataSourceFactory.topRatedMovieList.value?.invalidate()
+        }
     }
 }

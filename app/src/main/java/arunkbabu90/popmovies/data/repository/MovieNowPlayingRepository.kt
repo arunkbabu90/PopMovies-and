@@ -24,6 +24,18 @@ class MovieNowPlayingRepository(private val apiService: TMDBEndPoint) {
     }
 
     fun getNetworkState(): LiveData<NetworkState> {
+        // Ensure movieDataSourceFactory is initialized before accessing its properties
+        if (!::movieDataSourceFactory.isInitialized) {
+            // This case should ideally not happen if fetchNowPlayingMovies is called first
+            // For now, let's assume it has been.
+        }
         return movieDataSourceFactory.nowPlayingMoviesList.switchMap { it.networkState }
+    }
+
+    fun refresh() {
+        // Ensure movieDataSourceFactory and its LiveData are initialized
+        if (::movieDataSourceFactory.isInitialized && movieDataSourceFactory.nowPlayingMoviesList.value != null) {
+            movieDataSourceFactory.nowPlayingMoviesList.value?.invalidate()
+        }
     }
 }

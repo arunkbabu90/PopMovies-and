@@ -2,13 +2,11 @@ package arunkbabu90.popmovies.ui.fragment
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.app.ActivityOptionsCompat
 import androidx.core.view.ViewCompat
-import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -35,7 +33,7 @@ class TopRatedFragment : Fragment() {
     private lateinit var repository: MovieTopRatedRepository
     private lateinit var viewModel: TopRatedMovieViewModel
     private var adapter: MovieAdapter? = null
-    private var isLoaded: Boolean = false
+    private var isLoaded: Boolean = false // Tracks if at least one successful load has occurred
 
     private val TAG = TopRatedFragment::class.simpleName
 
@@ -51,8 +49,26 @@ class TopRatedFragment : Fragment() {
         repository = MovieTopRatedRepository(apiService)
         viewModel = getViewModel()
 
-        val noOfCols: Int = calculateNoOfColumns(context)
+        setupRecyclerView()
+        setupSwipeToRefresh()
+        setupObservers()
 
+        if (isNetworkConnected(context)) {
+            if (!isLoaded && viewModel.isEmpty()) {
+                 binding.tvErr.text = getString(R.string.loading)
+                 binding.tvErr.visibility = View.VISIBLE
+            }
+            if (viewModel.topRatedMovies.value == null || binding.swipeRefreshLayout.isRefreshing) {
+                viewModel.refreshData()
+            }
+        } else {
+            binding.tvErr.text = getString(R.string.err_no_internet)
+            binding.tvErr.visibility = View.VISIBLE
+        }
+    }
+
+    private fun setupRecyclerView() {
+        val noOfCols: Int = calculateNoOfColumns(context)
         val lm = GridLayoutManager(context, noOfCols)
         adapter = MovieAdapter { movie, posterView -> if (movie != null) onMovieClick(movie, posterView) }
         lm.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
@@ -64,23 +80,72 @@ class TopRatedFragment : Fragment() {
         binding.rvMovieList.setHasFixedSize(true)
         binding.rvMovieList.layoutManager = lm
         binding.rvMovieList.adapter = adapter
+    }
 
+    private fun setupSwipeToRefresh() {
         binding.swipeRefreshLayout.setOnRefreshListener {
-            isLoaded = false // Reset loaded flag to allow reloading
-            loadMovies()
+            viewModel.refreshData()
+        }
+    }
+
+    private fun setupObservers() {
+        viewModel.topRatedMovies.observe(viewLifecycleOwner) { moviePagedList ->
+            adapter?.submitList(moviePagedList)
+            if (moviePagedList.isNotEmpty()) {
+                isLoaded = true
+                binding.tvErr.visibility = View.GONE
+            }
+            if (binding.swipeRefreshLayout.isRefreshing) {
+                binding.swipeRefreshLayout.isRefreshing = false
+            }
         }
 
-        if (isNetworkConnected(context)) {
-            loadMovies(true)
-        } else {
-            binding.tvErr.text = getString(R.string.err_no_internet)
-            binding.tvErr.visibility = View.VISIBLE
+        viewModel.networkState.observe(viewLifecycleOwner) { state ->
+            binding.swipeRefreshLayout.isRefreshing = state == NetworkState.LOADING
+
+            when (state) {
+                NetworkState.LOADING -> {
+                    if (viewModel.isEmpty() && !isLoaded) {
+                        binding.tvErr.text = getString(R.string.loading)
+                        binding.tvErr.visibility = View.VISIBLE
+                    } else {
+                        binding.tvErr.visibility = View.GONE
+                    }
+                }
+                NetworkState.LOADED -> {
+                    isLoaded = true
+                    if (viewModel.isEmpty()) {
+                        binding.tvErr.text = getString(R.string.no_movies_found)
+                        binding.tvErr.visibility = View.VISIBLE
+                    } else {
+                        binding.tvErr.visibility = View.GONE
+                    }
+                }
+                NetworkState.ERROR -> {
+                    if (viewModel.isEmpty()) {
+                        binding.tvErr.text = getString(R.string.err_loading_movies)
+                        binding.tvErr.visibility = View.VISIBLE
+                    } else {
+                        binding.tvErr.visibility = View.GONE
+                    }
+                }
+                else -> {
+                     binding.tvErr.visibility = View.GONE
+                }
+            }
+            if (!viewModel.isEmpty() || state != NetworkState.LOADING) {
+                adapter?.setNetworkState(state)
+            }
         }
 
         (activity as MovieActivity).networkChangeLiveData.observe(viewLifecycleOwner) { isAvailable ->
             if (isAvailable) {
-                if (!isLoaded || binding.swipeRefreshLayout.isRefreshing) {
-                    loadMovies(true)
+                if (view != null && !isLoaded && !binding.swipeRefreshLayout.isRefreshing) {
+                     if (viewModel.isEmpty()) {
+                        binding.tvErr.text = getString(R.string.loading)
+                        binding.tvErr.visibility = View.VISIBLE
+                    }
+                    viewModel.refreshData()
                 }
             } else {
                 binding.tvErr.text = getString(R.string.err_no_internet)
@@ -118,60 +183,16 @@ class TopRatedFragment : Fragment() {
             startActivity(intent)
     }
 
-    private fun loadMovies(isShowLoadingIndicator: Boolean = false) {
-        if (isLoaded && !binding.swipeRefreshLayout.isRefreshing) {
-            return
-        }
-        binding.swipeRefreshLayout.isRefreshing = true
-
-        if (isShowLoadingIndicator) {
-            binding.tvErr.text = getString(R.string.loading)
-            binding.tvErr.isVisible = true
-        }
-
-        viewModel.topRatedMovies.observe(viewLifecycleOwner) { moviePagedList ->
-            adapter?.submitList(moviePagedList)
-            isLoaded = true
-            Log.d(TAG, "isLoaded = true")
-            if (binding.swipeRefreshLayout.isRefreshing) {
-                binding.swipeRefreshLayout.isRefreshing = false
-            }
-        }
-
-        viewModel.networkState.observe(viewLifecycleOwner) { state ->
-            if (binding.swipeRefreshLayout.isRefreshing && state != NetworkState.LOADING) {
-                binding.swipeRefreshLayout.isRefreshing = false
-            }
-
-            if (viewModel.isEmpty() && state == NetworkState.ERROR) {
-                binding.tvErr.visibility = View.VISIBLE
-                binding.tvErr.text = getString(R.string.err_loading_movies)
-            } else if (state == NetworkState.LOADED || !viewModel.isEmpty()) {
-                binding.tvErr.visibility = View.GONE
-            }
-
-            if (!binding.swipeRefreshLayout.isRefreshing) {
-                if (state == NetworkState.LOADING && !viewModel.isEmpty()) {
-                    adapter?.setNetworkState(state)
-                } else if (state != NetworkState.LOADING) {
-                    adapter?.setNetworkState(state)
-                }
-            }
-        }
-    }
-
     private fun getViewModel(): TopRatedMovieViewModel {
-        if (!::viewModel.isInitialized) {
-            viewModel = ViewModelProvider(this, object : ViewModelProvider.Factory {
-                @Suppress("UNCHECKED_CAST")
-                override fun <T : ViewModel> create(modelClass: Class<T>): T = TopRatedMovieViewModel(repository) as T
-            })[TopRatedMovieViewModel::class.java]
-        }
-        return viewModel
+        return ViewModelProvider(this, object : ViewModelProvider.Factory {
+            @Suppress("UNCHECKED_CAST")
+            override fun <T : ViewModel> create(modelClass: Class<T>): T = TopRatedMovieViewModel(repository) as T
+        })[TopRatedMovieViewModel::class.java]
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
+        binding.rvMovieList.adapter = null
         _binding = null
     }
 }

@@ -11,12 +11,14 @@ import io.reactivex.disposables.CompositeDisposable
 class NowPlayingMovieViewModel(private val repository: MovieNowPlayingRepository) : ViewModel() {
     private val disposable = CompositeDisposable()
 
-    val nowPlayingMovies: LiveData<PagedList<Movie>> by lazy {
-        repository.fetchNowPlayingMovies(disposable)
-    }
+    val nowPlayingMovies: LiveData<PagedList<Movie>> = repository.fetchNowPlayingMovies(disposable)
 
     val networkState: LiveData<NetworkState> by lazy {
         repository.getNetworkState()
+    }
+
+    fun refreshData() {
+        repository.refresh()
     }
 
     fun isEmpty() = nowPlayingMovies.value?.isEmpty() ?: true

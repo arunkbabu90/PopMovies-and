@@ -11,15 +11,17 @@ import io.reactivex.disposables.CompositeDisposable
 class PopularMovieViewModel(private val repository: MoviePopularRepository) : ViewModel() {
     private val disposable = CompositeDisposable()
 
-    val popularMovies: LiveData<PagedList<Movie>> by lazy {
-        repository.fetchPopularMovies(disposable)
-    }
+    val popularMovies: LiveData<PagedList<Movie>> = repository.fetchPopularMovies(disposable)
 
     val networkState: LiveData<NetworkState> by lazy {
         repository.getNetworkState()
     }
 
-    fun isEmpty(): Boolean = popularMovies.value?.isEmpty() ?: true
+    fun refreshData() {
+        repository.refresh()
+    }
+
+    fun isEmpty() = popularMovies.value?.isEmpty() ?: true
 
     override fun onCleared() {
         super.onCleared()
