@@ -24,8 +24,12 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
 
-        buildTypes.each {
-            it.buildConfigField("String", "API_KEY", MovieDbApiKey)
+        buildTypes.all { buildType ->
+            def movieKey = project.findProperty("MovieDbApiKey") ?: System.getenv("MovieDbApiKey")
+            if (!movieKey) {
+                throw new GradleException("MovieDbApiKey is missing. Pass it via -P or env var.")
+            }
+            buildType.buildConfigField "String", "API_KEY", "\"${movieKey}\""
         }
     }
 

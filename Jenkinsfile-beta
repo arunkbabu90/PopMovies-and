@@ -2,6 +2,7 @@ pipeline {
     agent any
     environment {
         GITHUB_PAT = credentials('tracer-pat')
+        TMDB_API_KEY_FILE = credentials('tmdb_api_key_file')
     }
     
     stages {
@@ -49,7 +50,10 @@ pipeline {
 
         stage('Build Release AAB') {
             steps {
-               sh './gradlew clean bundleRelease'
+               script {
+                    env.MovieDbApiKey = readFile(TMDB_API_KEY_FILE).trim()
+               }
+               sh './gradlew clean bundleRelease -PMovieDbApiKey=$MovieDbApiKey'
             }
         }
 
