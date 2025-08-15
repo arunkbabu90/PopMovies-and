@@ -41,7 +41,7 @@ pipeline {
                     withCredentials([
                         file(credentialsId: 'POPMOVIES_KEYSTORE_FILE', variable: 'APP_KEYSTORE_FILE')
                     ]) {
-                        bat 'copy "%APP_KEYSTORE_FILE%" app\\Pop Movies v1.jks'
+                        bat 'copy "%APP_KEYSTORE_FILE%" app\\Pop_Movies_v1.jks'
                     }
                 }
             }
