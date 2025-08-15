@@ -81,7 +81,7 @@ pipeline {
 
             // Copy the artifacts to the specific directory
             script {
-                def destinationDir = 'E:\\Outputs\\Android_Artifacts\\PopMovies\\'
+                def destinationDir = 'E:\\Outputs\\Android_Artifacts\\PopMovies'
                 def appBundlePath = 'app\\build\\outputs\\bundle\\release\\'
                 bat "copy ${appBundlePath} ${destinationDir}\\app"
             }
