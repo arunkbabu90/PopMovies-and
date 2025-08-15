@@ -18,15 +18,28 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    // Load from local file if present
+    def keystoreProperties = new Properties()
+    def keystoreFile = rootProject.file("keystore.properties")
+    if (keystoreFile.exists()) {
+        keystoreProperties.load(new FileInputStream(keystoreFile))
+    } else {
+        println "WARNING: keystore.properties not found. Release build may not be signed."
+    }
+
     signingConfigs {
         release {
-            if (project.hasProperty("keystoreProperties")) {
+            if (keystoreProperties.containsKey('keyAlias') &&
+                    keystoreProperties.containsKey('keyPassword') &&
+                    keystoreProperties.containsKey('storeFile') &&
+                    keystoreProperties.containsKey('storePassword')) {
+
                 keyAlias keystoreProperties['keyAlias']
                 keyPassword keystoreProperties['keyPassword']
                 storeFile file(keystoreProperties['storeFile'])
                 storePassword keystoreProperties['storePassword']
             } else {
-                println "WARNING: keystoreProperties not found. Release build may not be signed."
+                println "WARNING: Missing one or more keystore properties in keystore.properties. Release build may not be signed."
             }
         }
     }
