@@ -20,11 +20,11 @@ import arunkbabu90.popmovies.R
 import arunkbabu90.popmovies.databinding.ActivityMovieBinding
 import arunkbabu90.popmovies.ui.adapter.CategoryAdapter
 import com.google.android.material.tabs.TabLayoutMediator
+import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.ktx.auth
+import com.google.firebase.auth.auth
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
+import com.google.firebase.firestore.firestore
 
 class MovieActivity : AppCompatActivity(), FirebaseAuth.AuthStateListener {
     private lateinit var binding: ActivityMovieBinding

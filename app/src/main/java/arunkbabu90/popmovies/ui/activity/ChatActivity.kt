@@ -11,9 +11,15 @@ import arunkbabu90.popmovies.data.model.Message
 import arunkbabu90.popmovies.databinding.ActivityChatBinding
 import arunkbabu90.popmovies.runPullDownAnimation
 import arunkbabu90.popmovies.ui.adapter.ChatAdapter
-import com.google.firebase.database.*
-import com.google.firebase.database.ktx.database
-import com.google.firebase.ktx.Firebase
+import com.google.firebase.Firebase
+import com.google.firebase.database.ChildEventListener
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.Query
+import com.google.firebase.database.ServerValue
+import com.google.firebase.database.ValueEventListener
+import com.google.firebase.database.database
 
 class ChatActivity : AppCompatActivity(), View.OnClickListener {
     private lateinit var binding: ActivityChatBinding

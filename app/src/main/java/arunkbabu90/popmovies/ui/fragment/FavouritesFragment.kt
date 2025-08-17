@@ -23,13 +23,13 @@ import arunkbabu90.popmovies.ui.activity.MovieDetailsActivity
 import arunkbabu90.popmovies.ui.adapter.FavouritesAdapter
 import arunkbabu90.popmovies.ui.viewmodel.FavouritesViewModel
 import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.Firebase
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.auth.ktx.auth
+import com.google.firebase.auth.auth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.SetOptions
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
+import com.google.firebase.firestore.firestore
 
 class FavouritesFragment : Fragment() {
     private var _binding: FragmentFavouritesBinding? = null
@@ -57,7 +57,7 @@ class FavouritesFragment : Fragment() {
         adapter = FavouritesAdapter(favouriteMovies) { favouriteMovie ->
             if (favouriteMovie != null) onFavouriteClick(favouriteMovie, null)
         }
-        binding.tvFavErr.visibility = if (favouriteMovies.isNullOrEmpty()) View.VISIBLE else View.GONE
+        binding.tvFavErr.visibility = if (favouriteMovies.isEmpty()) View.VISIBLE else View.GONE
 
         val lm = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
         binding.rvFavourites.setHasFixedSize(true)
@@ -184,7 +184,7 @@ class FavouritesFragment : Fragment() {
                     }
                 }
             }
-            binding.tvFavErr.visibility = if (favouriteMovies.isNullOrEmpty()) View.VISIBLE else View.GONE
+            binding.tvFavErr.visibility = if (favouriteMovies.isEmpty()) View.VISIBLE else View.GONE
             adapter.notifyDataSetChanged()
         }
     }

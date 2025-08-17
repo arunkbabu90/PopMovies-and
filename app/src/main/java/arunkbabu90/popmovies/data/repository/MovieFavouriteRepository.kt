@@ -4,13 +4,13 @@ import arunkbabu90.popmovies.Constants
 import arunkbabu90.popmovies.data.api.PAGE_SIZE
 import arunkbabu90.popmovies.data.model.FavouritesLiveData
 import arunkbabu90.popmovies.ui.viewmodel.FavouritesViewModel
+import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.auth.ktx.auth
+import com.google.firebase.auth.auth
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
+import com.google.firebase.firestore.firestore
 
 class MovieFavouriteRepository : FavouritesViewModel.FavouritesRepository,
     FavouritesLiveData.OnLastMovieReachedCallback, FavouritesLiveData.OnLastVisibleMovieCallback {
