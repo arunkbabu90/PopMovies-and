@@ -1,3 +1,4 @@
+v4.0
 * Fixed Movies not loading
 * Swipe-down to refresh movies
 * Detailed Cast and Crew Information
